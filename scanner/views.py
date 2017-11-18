@@ -10,20 +10,20 @@ def scan(request):
 
 	if not market_summaries["success"]:
 		error = ["Failed to acquire market summaries"]
-		render(request, "scanner/scanner.html", { 'error': error })
+		render(request, "scanner/scanner.html", { "error": error })
 
 	table = []
 
 	results = market_summaries["result"]
 
-	for ms in results:
+	for i, ms in enumerate(results):
 
 		s = ms["Summary"]
 
 		last = s["Last"]
 		prevDay = s["PrevDay"]
 
-		price_change = last - prevDay / prevDay 
+		price_change = (last - prevDay) / prevDay 
 
 		row_data = []
 		row_data.append(s["MarketName"])
@@ -32,10 +32,9 @@ def scan(request):
 		row_data.append("{:.8f}".format(s["Ask"]))
 		row_data.append("{:.8f}".format(last))
 		row_data.append("{:.8f}".format(prevDay))
-		row_data.append("{:.8f}".format(price_change))
+		row_data.append("{:.2f}%".format(price_change * 100))
 
-		table.append("<tr>")
-
+		table.append("<tr bgcolor={}>".format("Gainsboro" if i % 2 == 0 else "White"))
 		for col in row_data:
 			table.append("<td>")
 			table.append(col)
@@ -43,5 +42,5 @@ def scan(request):
 
 		table.append("</tr>")
 
-		print("".join(table))
-		return
+	table_str = "".join(table)
+	return render(request, "scanner/scanner.html", { "table": table_str })

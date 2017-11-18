@@ -18,6 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^trading/', include("trading_app.urls"))
+    url(r'^trading/', include("trading_app.urls")),
+    url(r'^scanner/', include("scanner.urls"))
 ]
 
