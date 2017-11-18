@@ -1,0 +1,42 @@
+{% extends "trading_app/header.html" %}
+
+{% load static %}
+
+{% block content %}
+	<br><br>
+	<table border="1" class="container">
+		<tr>
+			<th>Market</th>
+			<th>Base Volume</th>
+			<th>Last Price</th>
+			<th>Bid</th>
+			<th>Ask</th>
+			<th>RSI</th>
+		</tr>
+		<tr>
+			<td>BTC-BCC</td>
+			<td>11024.705</td>
+			<td>0.11715119</td>
+			<td>0.11700000</td>
+			<td>0.11700000</td>
+			<td>43</td>
+		</tr>
+		<tr>
+			<td>BTC-ETH</td>
+			<td>4247.906</td>
+			<td>0.04569415</td>
+			<td>0.04617363</td>
+			<td>0.04340018</td>
+			<td>
+				52
+				<div class="row-btn">
+					<button class="row-btn-1">
+						<img src="{% static 'images/tradingview.png' %}" width="50px">
+					</button>
+				</div>
+			</td>
+			
+		</tr>
+	</table>
+
+{% endblock %}
