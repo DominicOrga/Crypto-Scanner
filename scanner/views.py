@@ -18,18 +18,23 @@ def scan(request):
 
 	for i, ms in enumerate(results):
 
-		s = ms["Summary"]
+		market = ms["Market"]
 
-		last = s["Last"]
-		prevDay = s["PrevDay"]
+		if market['BaseCurrency'] != 'BTC':
+			continue
+
+		summary = ms["Summary"]
+
+		last = summary["Last"]
+		prevDay = summary["PrevDay"]
 
 		price_change = (last - prevDay) / prevDay 
 
 		row_data = []
-		row_data.append(s["MarketName"])
-		row_data.append("{:.8f}".format(s["Volume"]))
-		row_data.append("{:.8f}".format(s["Bid"]))
-		row_data.append("{:.8f}".format(s["Ask"]))
+		row_data.append(summary["MarketName"])
+		row_data.append("{:.8f}".format(summary["Volume"]))
+		row_data.append("{:.8f}".format(summary["Bid"]))
+		row_data.append("{:.8f}".format(summary["Ask"]))
 		row_data.append("{:.8f}".format(last))
 		row_data.append("{:.8f}".format(prevDay))
 		row_data.append("{:.2f}%".format(price_change * 100))
