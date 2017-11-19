@@ -1,45 +1,68 @@
 {% extends "header.html" %}
 
-{% block title %}
-Scanner
-{% endblock %}
+{% block title %} Scanner {% endblock %}
 
 {% block body %}
 
-<br>
-<table align="center" class="table-bordered table-striped">
-	<tr>
-		<th> Market </th>
-		<th> Base Volume (24h) </th>
-		<th> Bid </th>
-		<th> Ask </th>
-		<th> Last </th>
-		<th> Previous Day </th>
-		<th> % Change (24h) </th>
-	</tr>
+	<br>
+	<table align="center" class="table-bordered table-striped">
+		<thead>
+			<tr>
+				<th> Market </th>
+				<th> Base Volume (24h) </th>
+				<th> Bid </th>
+				<th> Ask </th>
+				<th> Last </th>
+				<th> Previous Day </th>
+				<th> % Change (24h) </th>
+			</tr>
+		</thead>
 
-	{% for row in table %}
-		<tr>
-			<td> {{ row.MarketName }} </td>
-			<td> {{ row.BaseVolume }} </td>
-			<td> {{ row.Bid }} </td>
-			<td> {{ row.Ask }} </td>
-			<td> {{ row.Last }} </td>
-			<td> {{ row.PrevDay }} </td>
-			<td> {{ row.Change }} </td>
-		</tr>
-	{% endfor %}
-
-</table>
+		<tbody id="table-body" />
+	</table>
 
 {% endblock %}
 
 {% block javascript %}
 	<script type="text/javascript">
 
-		setTimeout(function() {
-			window.location.reload();
-		}, 30000)
+		(function update() {
+			$.ajax({
+				url: "{% url 'rescan' %}",
+				type: "GET",
+				dataType: "json",
+				success: function(response) {
+
+					var rowData = response['table'];
+
+					var rowHtml = "";
+
+					for (i = 0; i < rowData.length; i++) {
+						var row = rowData[i];
+
+						rowHtml += "<tr>";
+						rowHtml += "<td>" + row["MarketName"] + "</td>";
+						rowHtml += "<td>" + row["BaseVolume"] + "</td>";
+						rowHtml += "<td>" + row["Bid"] + "</td>";
+						rowHtml += "<td>" + row["Ask"] + "</td>";
+						rowHtml += "<td>" + row["Last"] + "</td>";
+						rowHtml += "<td>" + row["PrevDay"] + "</td>";
+						rowHtml += "<td>" + row["Change"] + "</td>";
+						rowHtml += "</tr>";
+
+					}
+
+					$("#table-body").empty();
+					$("#table-body").html(rowHtml);
+				}
+			}).then(function() {
+				setTimeout(update, 10000); // Execute upda
+			})
+		})();
+
+		// setTimeout(function() {
+		// 	window.location.reload();
+		// }, 30000)
 
 	</script>
 {% endblock %}
