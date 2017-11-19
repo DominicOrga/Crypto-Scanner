@@ -6,8 +6,34 @@ Scanner
 
 {% block body %}
 
-<table>
-	{{ table|safe }}
+<table border="1" align="center">
+	<tr>
+		<th> Market </th>
+		<th> Base Volume (24h) </th>
+		<th> Bid </th>
+		<th> Ask </th>
+		<th> Last </th>
+		<th> Previous Day </th>
+		<th> % Change (24h) </th>
+	</tr>
+
+	{% for row in table %}
+		{% if forloop.counter|divisibleby:2 %}
+			<tr bgcolor="#E8E8E8">
+		{% else %}
+			<tr bgcolor="White">
+		{% endif %}
+		
+			<td> {{ row.MarketName }} </td>
+			<td> {{ row.BaseVolume }} </td>
+			<td> {{ row.Bid }} </td>
+			<td> {{ row.Ask }} </td>
+			<td> {{ row.Last }} </td>
+			<td> {{ row.PrevDay }} </td>
+			<td> {{ row.Change }} </td>
+		</tr>
+
+	{% endfor %}
 </table>
 
 {% endblock %}

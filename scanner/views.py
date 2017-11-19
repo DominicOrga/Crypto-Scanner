@@ -30,22 +30,16 @@ def scan(request):
 
 		price_change = (last - prevDay) / prevDay 
 
-		row_data = []
-		row_data.append(summary["MarketName"])
-		row_data.append("{:.8f}".format(summary["Volume"]))
-		row_data.append("{:.8f}".format(summary["Bid"]))
-		row_data.append("{:.8f}".format(summary["Ask"]))
-		row_data.append("{:.8f}".format(last))
-		row_data.append("{:.8f}".format(prevDay))
-		row_data.append("{:.2f}%".format(price_change * 100))
+		row_data = {}
 
-		table.append("<tr bgcolor={}>".format("Gainsboro" if i % 2 == 0 else "White"))
-		for col in row_data:
-			table.append("<td>")
-			table.append(col)
-			table.append("</td>")
+		row_data["MarketName"] = summary["MarketName"]
+		row_data["BaseVolume"] = "{:.3f}".format(summary["BaseVolume"])
+		row_data["Bid"] = "{:.8f}".format(summary["Bid"])
+		row_data["Ask"] = "{:.8f}".format(summary["Ask"])
+		row_data["Last"] = "{:.8f}".format(last)
+		row_data["PrevDay"] = "{:.8f}".format(prevDay)
+		row_data["Change"] = "{:.1f}%".format(price_change * 100)
 
-		table.append("</tr>")
+		table.append(row_data)
 
-	table_str = "".join(table)
-	return render(request, "scanner/scanner.html", { "table": table_str })
+	return render(request, "scanner/scanner.html", { "table": table })
