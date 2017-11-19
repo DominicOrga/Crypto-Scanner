@@ -5,6 +5,9 @@ import numpy as np
 
 # Create your views here.
 def scan(request):
+	table = []
+	error = []
+
 	btx = bittrex.Bittrex(bittrex.API_KEY, bittrex.API_SECRET, api_version = bittrex.API_V2_0)
 
 	market_summaries = btx.get_market_summaries()
@@ -21,12 +24,7 @@ def scan(request):
 
 	markets = sorted(markets, key = lambda x: x["Summary"]["BaseVolume"], reverse = True)
 
-	table = []
 	for ms in markets:
-
-		if ms["Market"]["BaseCurrency"] != "BTC":
-			continue
-
 		summary = ms["Summary"]
 
 		last = summary["Last"]
