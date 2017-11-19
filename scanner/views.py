@@ -3,7 +3,6 @@ from libs.bittrexlib import bittrex
 import numpy as np
 
 
-# Create your views here.
 def scan(request):
 	table = []
 	error = []
