@@ -6,7 +6,8 @@ Scanner
 
 {% block body %}
 
-<table border="1" align="center">
+<br>
+<table align="center" class="table-bordered table-striped">
 	<tr>
 		<th> Market </th>
 		<th> Base Volume (24h) </th>
@@ -18,12 +19,7 @@ Scanner
 	</tr>
 
 	{% for row in table %}
-		{% if forloop.counter|divisibleby:2 %}
-			<tr bgcolor="#E8E8E8">
-		{% else %}
-			<tr bgcolor="White">
-		{% endif %}
-		
+		<tr>
 			<td> {{ row.MarketName }} </td>
 			<td> {{ row.BaseVolume }} </td>
 			<td> {{ row.Bid }} </td>
