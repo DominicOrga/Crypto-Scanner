@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from libs.bittrexlib import bittrex
+import numpy as np
 
 
 # Create your views here.
@@ -12,33 +13,35 @@ def scan(request):
 		error = ["Failed to acquire market summaries"]
 		render(request, "scanner/scanner.html", { "error": error })
 
+	markets = market_summaries["result"]
+	markets = [ms for ms in markets 
+				if ms["Market"]["BaseCurrency"] == "BTC" and 
+				ms["Summary"]["PrevDay"] >= 0.001 and 
+				ms["Summary"]["BaseVolume"] >= 750]
+
+	markets = sorted(markets, key = lambda x: x["Summary"]["BaseVolume"], reverse = True)
+
 	table = []
+	for ms in markets:
 
-	results = market_summaries["result"]
-
-	for i, ms in enumerate(results):
-
-		market = ms["Market"]
-
-		if market['BaseCurrency'] != 'BTC':
+		if ms["Market"]["BaseCurrency"] != "BTC":
 			continue
 
 		summary = ms["Summary"]
 
 		last = summary["Last"]
 		prevDay = summary["PrevDay"]
-
 		price_change = (last - prevDay) / prevDay 
 
-		row_data = {}
-
-		row_data["MarketName"] = summary["MarketName"]
-		row_data["BaseVolume"] = "{:.3f}".format(summary["BaseVolume"])
-		row_data["Bid"] = "{:.8f}".format(summary["Bid"])
-		row_data["Ask"] = "{:.8f}".format(summary["Ask"])
-		row_data["Last"] = "{:.8f}".format(last)
-		row_data["PrevDay"] = "{:.8f}".format(prevDay)
-		row_data["Change"] = "{:.1f}%".format(price_change * 100)
+		row_data = {
+			"MarketName": summary["MarketName"],
+			"BaseVolume": "{:.3f}".format(summary["BaseVolume"]),
+			"Bid":		  "{:.8f}".format(summary["Bid"]),
+			"Ask": 		  "{:.8f}".format(summary["Ask"]),
+			"Last": 	  "{:.8f}".format(last),
+			"PrevDay": 	  "{:.8f}".format(prevDay),
+			"Change": 	  "{:.1f}%".format(price_change * 100)
+		}
 
 		table.append(row_data)
 
