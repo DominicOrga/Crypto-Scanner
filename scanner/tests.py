@@ -1,6 +1,8 @@
 from django.test import TestCase
 from libs.bittrexlib import bittrex
 from scanner import utils as scanner
+from scanner.models import RsiModel
+import datetime
 # Create your tests here.
 
 class UtilTest(TestCase):
@@ -13,3 +15,17 @@ class UtilTest(TestCase):
 		a, b, c = scanner.rsi(close_prices)
 
 		self.assertTrue(c - 63.93 < 0.01)
+
+class RsiModelTest(TestCase):
+
+	def test_datetime_insertion(self):
+
+		a = RsiModel.objects.all().count()
+
+		p = RsiModel(ave_gain=32, ave_loss=0, datetime="2012-2-3 4:4:3")
+		p.save()
+
+		self.assertEquals(RsiModel.objects.all().count(), a + 1)
+
+		RsiModel.objects.last().delete()
+		self.assertEquals(RsiModel.objects.all().count(), a)
