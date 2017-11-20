@@ -18,12 +18,12 @@ def scan(request):
 		error = ["Failed to acquire market summaries"]
 		render(request, "scanner/scanner.html", { "error": error })
 
+	# Filter markets
 	markets = market_summaries["result"]
 	markets = [ms for ms in markets 
 				if ms["Market"]["BaseCurrency"] == "BTC" and 
 				ms["Summary"]["PrevDay"] >= 0.001 and 
 				ms["Summary"]["BaseVolume"] >= 750]
-
 	markets = sorted(markets, key = lambda x: x["Summary"]["BaseVolume"], reverse = True)
 
 	for ms in markets:
@@ -46,3 +46,4 @@ def scan(request):
 		table.append(row_data)
 
 	return JsonResponse({'table': table})
+
