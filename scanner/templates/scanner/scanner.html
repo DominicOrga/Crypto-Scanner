@@ -3,7 +3,6 @@
 {% block title %} Scanner {% endblock %}
 
 {% block body %}
-
 	<br>
 	<table align="center" class="table-bordered table-striped">
 		<thead>
@@ -20,7 +19,6 @@
 
 		<tbody id="table-body" />
 	</table>
-
 {% endblock %}
 
 {% block javascript %}
@@ -28,7 +26,7 @@
 
 		(function update() {
 			$.ajax({
-				url: "{% url 'rescan' %}",
+				url: "{% url 'scan' %}",
 				type: "GET",
 				dataType: "json",
 				success: function(response) {
@@ -58,10 +56,6 @@
 				setTimeout(update, 10000); // Execute upda
 			})
 		})();
-
-		// setTimeout(function() {
-		// 	window.location.reload();
-		// }, 30000)
 
 	</script>
 {% endblock %}
