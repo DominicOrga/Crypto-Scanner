@@ -7,7 +7,7 @@ from .models import RsiModel
 
 import datetime, time
 
-TICK_INTERVAL = bittrex.TICKINTERVAL_ONEMIN
+TICK_INTERVAL = bittrex.TICKINTERVAL_FIVEMIN
 
 def load_scanner(request):
 	return render(request, "scanner/scanner.html")
