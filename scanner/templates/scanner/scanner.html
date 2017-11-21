@@ -14,6 +14,7 @@
 				<th> Last </th>
 				<th> Previous Day </th>
 				<th> % Change (24h) </th>
+				<th> RSI </th>
 			</tr>
 		</thead>
 
@@ -24,10 +25,13 @@
 {% block javascript %}
 	<script type="text/javascript">
 
+		var isRescan = false;
+
 		(function update() {
 			$.ajax({
 				url: "{% url 'scan' %}",
 				type: "GET",
+				data: { isRescan },
 				dataType: "json",
 				success: function(response) {
 
@@ -46,6 +50,7 @@
 						rowHtml += "<td>" + row["Last"] + "</td>";
 						rowHtml += "<td>" + row["PrevDay"] + "</td>";
 						rowHtml += "<td>" + row["Change"] + "</td>";
+						rowHtml += "<td>" + row["RSI"] + "</td>";
 						rowHtml += "</tr>";
 					}
 
@@ -53,6 +58,7 @@
 					$("#table-body").html(rowHtml);
 				}
 			}).then(function() {
+				isRescan = true;
 				setTimeout(update, 10000); // Execute upda
 			})
 		})();

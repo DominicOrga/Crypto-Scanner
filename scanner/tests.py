@@ -16,8 +16,16 @@ class UtilTest(TestCase):
 						45.64, 46.21]
 
 		a, b, c = scanner.rsi(close_prices)
+		self.assertTrue(abs(c - 62.93) < 1)
 
-		self.assertTrue(c - 63.93 < 0.01)
+		a, b, c = scanner.update_rsi(a, b, 46.25 - close_prices[-1])
+		self.assertTrue(abs(c - 63.26) < 1)
+
+		a, b, c = scanner.update_rsi(a, b, 45.71 - 46.25)
+		self.assertTrue(abs(c - 56.06) < 1)
+
+		a, b, c = scanner.update_rsi(a, b, 46.45 - 45.71)
+		self.assertTrue(abs(c - 62.38) < 1)
 
 class RsiModelTest(TestCase):
 
