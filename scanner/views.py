@@ -44,60 +44,41 @@ def scan(request):
 
 		rsi = 0
 
-		# candles = btx.get_candles(market_name, TICK_INTERVAL)
-		# if (candles["success"]):
-		# 	if request.GET["isRescan"] == "true":
-		# 		last_candle = candles["result"][-1]
+		candles = btx.get_candles(market_name, TICK_INTERVAL)
+		if (candles["success"]):
+			if request.GET["isRescan"] == "true":
+				last_candle = candles["result"][-1]
 
-		# 		last_candle_dt = scannerutil.btxdt_to_pydt(last_candle["T"])
+				last_candle_dt = scannerutil.btxdt_to_pydt(last_candle["T"])
 
-		# 		try:
-		# 			r = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
-		# 			rs = r.ave_gain / r.ave_loss
-		# 			rsi = 100 - 100 / (1 + rs)
+				try:
+					r = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
+					rs = r.ave_gain / r.ave_loss
+					rsi = 100 - 100 / (1 + rs)
 
-		# 			print("rsi maintained")
-		# 			print("ave_gain = " + str(r.ave_gain))
-		# 			print("ave_loss = " + str(r.ave_gain))
-		# 			print("last price = " + str(last_candle["L"]))
-		# 			print("rsi = " + str(rsi))
+				except RsiModel.DoesNotExist:
+					prec_candle = candles["result"][-2]
+					prec_candle_dt = scannerutil.btxdt_to_pydt(prec_candle["T"])
 
-		# 		except RsiModel.DoesNotExist:
-		# 			prec_candle = candles["result"][-2]
-		# 			prec_candle_dt = scannerutil.btxdt_to_pydt(prec_candle["T"])
+					chg = last_candle["L"] - prec_candle["L"]
 
-		# 			chg = last_candle["L"] - prec_candle["L"]
+					last_rsi = RsiModel.objects.get(market = market_name, datetime = prec_candle_dt)
 
-		# 			last_rsi = RsiModel.objects.get(market = market_name, datetime = prec_candle_dt)
+					ave_gain, ave_loss, rsi = scannerutil.update_rsi(last_rsi.ave_gain, last_rsi.ave_loss, chg)
 
-		# 			ave_gain, ave_loss, rsi = scannerutil.update_rsi(last_rsi.ave_gain, last_rsi.ave_loss, chg)
+					r = RsiModel(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
+					r.save()
 
-		# 			r = RsiModel(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
-		# 			r.save()
+			else:
+				last_prices = [c["L"] for c in candles["result"]]
+				ave_gain, ave_loss, rsi = scannerutil.rsi(last_prices)
 
-		# 			print("rsi updated")
-		# 			print("ave_gain = " + str(ave_gain))
-		# 			print("ave_loss = " + str(ave_gain))
-		# 			print("last_price = " + str(last_candle["L"]))
-		# 			print("prec_price = " + str(prec_candle["L"]))
-		# 			print("rsi = " + str(rsi))
-
-		# 	else:
-		# 		last_prices = [c["L"] for c in candles["result"]]
-		# 		ave_gain, ave_loss, rsi = scannerutil.rsi(last_prices)
-
-		# 		last_candle_dt = scannerutil.btxdt_to_pydt(candles["result"][-1]["T"])
-		# 		try:
-		# 			r = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
-		# 		except RsiModel.DoesNotExist:
-		# 			r = RsiModel(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
-		# 			r.save()
-
-		# 		print("rsi initialized")
-		# 		print("ave_gain = " + str(ave_gain))
-		# 		print("ave_loss = " + str(ave_gain))
-		# 		print("last price = " + str(last_prices[-1]))
-		# 		print("rsi = " + str(rsi))
+				last_candle_dt = scannerutil.btxdt_to_pydt(candles["result"][-1]["T"])
+				try:
+					r = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
+				except RsiModel.DoesNotExist:
+					r = RsiModel(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
+					r.save()
 
 		row_data = {
 			"MarketName": market_name,
