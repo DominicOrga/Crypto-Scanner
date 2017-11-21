@@ -34,8 +34,7 @@ class RsiModelTest(TestCase):
 		# dt = datetime.datetime(2012, 2, 3, 4, 4, 3) # Y m d H M S
 		# OR making use of the string datetime acquired from bittrex json
 		# CREATE
-		t = time.strptime("2012-02-03T04:04:03", "%Y-%m-%dT%H:%M:%S")
-		dt = datetime.datetime.fromtimestamp(time.mktime(t))
+		dt = scanner.btxdt_to_pydt("2012-02-03T04:04:03")
 
 		q = RsiModel.objects.filter(market = "BTC-ETH", datetime = dt)
 		q.delete()		

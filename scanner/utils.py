@@ -1,4 +1,5 @@
-
+	
+import time, datetime
 
 def rsi(close_prices):
 	# Compute for first average gain and loss
@@ -32,3 +33,9 @@ def update_rsi(ave_gain, ave_loss, price_change):
 	rsi = 100 - 100 / (1 + rs)
 
 	return ave_gain, ave_loss, rsi
+
+def btxdt_to_pydt(btx_dt):
+	t = time.strptime(btx_dt, "%Y-%m-%dT%H:%M:%S")
+	dt = datetime.datetime.fromtimestamp(time.mktime(t))
+
+	return dt
