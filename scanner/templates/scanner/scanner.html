@@ -3,28 +3,33 @@
 {% block title %} Scanner {% endblock %}
 
 {% block body %}
-	<br>
-	<div>
-		<div >
-			<h7> BTC % Change (24h) : </h7>
-		</div>
-		<table class="table-bordered table-striped">
-			<thead>
-				<tr>
-					<th> Market </th>
-					<th> Base Volume (24h) </th>
-					<th> Bid </th>
-					<th> Ask </th>
-					<th> Last </th>
-					<th> Previous Day </th>
-					<th> % Change (24h) </th>
-					<th> % Change (14h) </th>
-					<th> RSI </th>
-				</tr>
-			</thead>
 
-			<tbody id="table-body" />
-		</table>
+	<br>
+	<div align="center">
+		<div style="display: inline-block; text-align: left;">
+			<h7> 
+				BTC Change (24h):
+				<h7 id="btc-change-24h"> </h7> 
+			</h7>
+		
+			<table class="table-bordered table-striped">
+				<thead>
+					<tr>
+						<th> Market </th>
+						<th> Base Volume (24h) </th>
+						<th> Bid </th>
+						<th> Ask </th>
+						<th> Last </th>
+						<th> Previous Day </th>
+						<th> % Change (24h) </th>
+						<th> % Change (14h) </th>
+						<th> RSI </th>
+					</tr>
+				</thead>
+
+				<tbody id="table-body" />
+			</table>
+		</div>
 	</div>
 {% endblock %}
 
@@ -50,14 +55,24 @@
 
 						rowHtml += "<tr>";
 						rowHtml += "<td>" + row["MarketName"] + "</td>";
-						rowHtml += "<td>" + row["BaseVolume"] + "</td>";
-						rowHtml += "<td>" + row["Bid"] + "</td>";
-						rowHtml += "<td>" + row["Ask"] + "</td>";
-						rowHtml += "<td>" + row["Last"] + "</td>";
-						rowHtml += "<td>" + row["PrevDay"] + "</td>";
-						rowHtml += "<td>" + row["Change24Hr"] + "</td>";
-						rowHtml += "<td>" + row["Change14Hr"] + "</td>";
-						rowHtml += "<td>" + row["RSI"] + "</td>";
+						rowHtml += "<td>" + row["BaseVolume"].toFixed(3) + "</td>";
+						rowHtml += "<td>" + row["Bid"].toFixed(8) + "</td>";
+						rowHtml += "<td>" + row["Ask"].toFixed(8) + "</td>";
+						rowHtml += "<td>" + row["Last"].toFixed(8) + "</td>";
+						rowHtml += "<td>" + row["PrevDay"].toFixed(8) + "</td>";
+
+						change24H = row["Change24Hr"]
+						rowHtml += "<td><font color='" + (change24H >= 0 ? "green" : "red") + "'>" + (change24H * 100).toFixed(1) + "%" + "</font></td>";
+
+						change14H = row["Change14Hr"]
+						rowHtml += "<td><font color='" + (change14H >= 0 ? "green" : "red") + "'>" + (change14H * 100).toFixed(1) + "%" + "</font></td>";
+
+						rsi = row["RSI"]
+						if (rsi >= 70 || rsi <= 25)
+							rowHtml += "<td><font color='" + (rsi >= 70 ? "green" : "red") + "'>" + rsi.toFixed(2) + "</font></td>";
+						else
+							rowHtml += "<td>" + rsi.toFixed(2) + "</td>";
+
 						rowHtml += "</tr>";
 					}
 
@@ -68,23 +83,26 @@
 			})
 		};
 
+		function updateBTCPriceChange() {
+			$.ajax({
+				url: "https://api.coinmarketcap.com/v1/ticker/bitcoin/",
+				type: "GET",
+				dataType: "json",
+				success: function(response) {
+					btcChange24h = response[0]["percent_change_24h"]
+					$("#btc-change-24h").empty();
+
+					html = "<font color='" + (btcChange24h >= 0 ? "green" : "red") + "'>" + btcChange24h + "%" + "</font>";
+					$("#btc-change-24h").html(html)
+				}
+			})
+		};
+
 		(function update() {
 			updateTable();
+			updateBTCPriceChange();
 			setTimeout(update, 10000);
 		})();
-
-		// (function update() {
-		// 	$.ajax({
-		// 		url: "https://api.coinmarketcap.com/v1/ticker/bitcoin/",
-		// 		type: "GET",
-		// 		dataType: "json",
-		// 		success: function(response) {
-		// 			btc_change_24hr = response[0]["percent_change_24h"]
-		// 		}
-		// 	})
-		// })();
-
-
 
 	</script>
 {% endblock %}

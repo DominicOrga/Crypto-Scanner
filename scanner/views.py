@@ -79,14 +79,14 @@ def scan(request):
 
 		row_data = {
 			"MarketName": market_name,
-			"BaseVolume": "{:.3f}".format(summary["BaseVolume"]),
-			"Bid":		  "{:.8f}".format(summary["Bid"]),
-			"Ask": 		  "{:.8f}".format(summary["Ask"]),
-			"Last": 	  "{:.8f}".format(last),
-			"PrevDay": 	  "{:.8f}".format(prevDay),
-			"Change24Hr": "{:.1f}%".format(price_chg_24 * 100),
-			"Change14Hr": "{:.1f}%".format(price_chg_14 * 100),
-			"RSI":		  "{:.2f}".format(rsi)
+			"BaseVolume": summary["BaseVolume"],
+			"Bid":		  summary["Bid"],
+			"Ask": 		  summary["Ask"],
+			"Last": 	  last,
+			"PrevDay": 	  prevDay,
+			"Change24Hr": price_chg_24,
+			"Change14Hr": price_chg_14,
+			"RSI":		  rsi
 		}
 
 		table.append(row_data)
