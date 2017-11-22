@@ -60,8 +60,8 @@ def scan(request):
 					rsi = 100 - 100 / (1 + rs)
 
 				except RsiModel.DoesNotExist:
-					last_prices = [c["L"] for c in candles_reduced]
-					ave_gain, ave_loss, rsi = scannerutil.rsi(last_prices)
+					candle_last_prices = [c["L"] for c in candles_reduced]
+					ave_gain, ave_loss, rsi = scannerutil.rsi(candle_last_prices)
 
 					try:
 						RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
@@ -69,8 +69,8 @@ def scan(request):
 						RsiModel.objects.create(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
 
 			else:
-				last_prices = [c["L"] for c in candles_reduced]
-				ave_gain, ave_loss, rsi = scannerutil.rsi(last_prices)
+				candle_last_prices = [c["L"] for c in candles_reduced]
+				ave_gain, ave_loss, rsi = scannerutil.rsi(candle_last_prices)
 
 				try:
 					RsiModel.objects.get(market = market_name, datetime = last_candle_dt)

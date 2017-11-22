@@ -4,23 +4,28 @@
 
 {% block body %}
 	<br>
-	<table align="center" class="table-bordered table-striped">
-		<thead>
-			<tr>
-				<th> Market </th>
-				<th> Base Volume (24h) </th>
-				<th> Bid </th>
-				<th> Ask </th>
-				<th> Last </th>
-				<th> Previous Day </th>
-				<th> % Change (24h) </th>
-				<th> % Change (14h) </th>
-				<th> RSI </th>
-			</tr>
-		</thead>
+	<div>
+		<div >
+			<h7> BTC % Change (24h) : </h7>
+		</div>
+		<table class="table-bordered table-striped">
+			<thead>
+				<tr>
+					<th> Market </th>
+					<th> Base Volume (24h) </th>
+					<th> Bid </th>
+					<th> Ask </th>
+					<th> Last </th>
+					<th> Previous Day </th>
+					<th> % Change (24h) </th>
+					<th> % Change (14h) </th>
+					<th> RSI </th>
+				</tr>
+			</thead>
 
-		<tbody id="table-body" />
-	</table>
+			<tbody id="table-body" />
+		</table>
+	</div>
 {% endblock %}
 
 {% block javascript %}

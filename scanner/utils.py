@@ -29,8 +29,13 @@ def update_rsi(ave_gain, ave_loss, price_change):
 	ave_gain = (ave_gain * 13 + (price_change if (price_change > 0) else 0)) / 14
 	ave_loss = (ave_loss * 13 + (-price_change if (price_change < 0) else 0)) / 14
 
-	rs = ave_gain / ave_loss
-	rsi = 100 - 100 / (1 + rs)
+	if ave_gain == 0:	
+		rsi = 0
+	elif ave_loss == 0:
+		rsi = 100
+	else:
+		rs = ave_gain / ave_loss	
+		rsi = 100 - 100 / (1 + rs)
 
 	return ave_gain, ave_loss, rsi
 
