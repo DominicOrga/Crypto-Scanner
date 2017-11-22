@@ -14,6 +14,7 @@
 				<th> Last </th>
 				<th> Previous Day </th>
 				<th> % Change (24h) </th>
+				<th> % Change (14h) </th>
 				<th> RSI </th>
 			</tr>
 		</thead>
@@ -49,7 +50,8 @@
 						rowHtml += "<td>" + row["Ask"] + "</td>";
 						rowHtml += "<td>" + row["Last"] + "</td>";
 						rowHtml += "<td>" + row["PrevDay"] + "</td>";
-						rowHtml += "<td>" + row["Change"] + "</td>";
+						rowHtml += "<td>" + row["Change24Hr"] + "</td>";
+						rowHtml += "<td>" + row["Change14Hr"] + "</td>";
 						rowHtml += "<td>" + row["RSI"] + "</td>";
 						rowHtml += "</tr>";
 					}

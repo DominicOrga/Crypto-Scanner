@@ -33,25 +33,27 @@ def scan(request):
 				ms["Summary"]["BaseVolume"] >= 750]
 	markets = sorted(markets, key = lambda x: x["Summary"]["BaseVolume"], reverse = True)
 
-
 	for ms in markets:
 		summary = ms["Summary"]
 
 		last = summary["Last"]
 		prevDay = summary["PrevDay"]
-		price_change = (last - prevDay) / prevDay 
+		price_chg_24 = (last - prevDay) / prevDay 
 		market_name = summary["MarketName"]
 
-		rsi = 0
+		price_chg_14 = 0
+		candles = btx.get_candles(market_name, bittrex.TICKINTERVAL_HOUR)
+		if (candles["success"]):
+			# Not 13 because the other hour is attributed to the current price
+			price_chg_14 = (last - candles["result"][-13]["L"]) / candles["result"][-13]["L"] 
 
-		candles = btx.get_candles(market_name, TICK_INTERVAL)
+		rsi = 0
+		candles = btx.get_candles(market_name, bittrex.TICKINTERVAL_ONEMIN)
 		if (candles["success"]):
 			candles_reduced = candles["result"][-250 : len(candles["result"])]
 			last_candle_dt = scannerutil.btxdt_to_pydt(candles_reduced[-1]["T"])
 
-
 			if request.GET["isRescan"] == "true":
-
 				try:
 					p = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
 					rs = p.ave_gain / p.ave_loss
@@ -82,7 +84,8 @@ def scan(request):
 			"Ask": 		  "{:.8f}".format(summary["Ask"]),
 			"Last": 	  "{:.8f}".format(last),
 			"PrevDay": 	  "{:.8f}".format(prevDay),
-			"Change": 	  "{:.1f}%".format(price_change * 100),
+			"Change24Hr": "{:.1f}%".format(price_chg_24 * 100),
+			"Change14Hr": "{:.1f}%".format(price_chg_14 * 100),
 			"RSI":		  "{:.2f}".format(rsi)
 		}
 
