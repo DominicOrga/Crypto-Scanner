@@ -7,7 +7,7 @@ from .models import RsiModel
 
 import datetime, time
 
-TICK_INTERVAL = bittrex.TICKINTERVAL_FIVEMIN
+TICK_INTERVAL = bittrex.TICKINTERVAL_ONEMIN
 
 def load_scanner(request):
 	return render(request, "scanner/scanner.html")
@@ -46,39 +46,34 @@ def scan(request):
 
 		candles = btx.get_candles(market_name, TICK_INTERVAL)
 		if (candles["success"]):
-			if request.GET["isRescan"] == "true":
-				last_candle = candles["result"][-1]
+			candles_reduced = candles["result"][-250 : len(candles["result"])]
+			last_candle_dt = scannerutil.btxdt_to_pydt(candles_reduced[-1]["T"])
 
-				last_candle_dt = scannerutil.btxdt_to_pydt(last_candle["T"])
+
+			if request.GET["isRescan"] == "true":
 
 				try:
-					r = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
-					rs = r.ave_gain / r.ave_loss
+					p = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
+					rs = p.ave_gain / p.ave_loss
 					rsi = 100 - 100 / (1 + rs)
 
 				except RsiModel.DoesNotExist:
-					prec_candle = candles["result"][-2]
-					prec_candle_dt = scannerutil.btxdt_to_pydt(prec_candle["T"])
+					last_prices = [c["L"] for c in candles_reduced]
+					ave_gain, ave_loss, rsi = scannerutil.rsi(last_prices)
 
-					chg = last_candle["L"] - prec_candle["L"]
-
-					last_rsi = RsiModel.objects.get(market = market_name, datetime = prec_candle_dt)
-
-					ave_gain, ave_loss, rsi = scannerutil.update_rsi(last_rsi.ave_gain, last_rsi.ave_loss, chg)
-
-					r = RsiModel(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
-					r.save()
+					try:
+						RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
+					except RsiModel.DoesNotExist:
+						RsiModel.objects.create(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
 
 			else:
-				last_prices = [c["L"] for c in candles["result"]]
+				last_prices = [c["L"] for c in candles_reduced]
 				ave_gain, ave_loss, rsi = scannerutil.rsi(last_prices)
 
-				last_candle_dt = scannerutil.btxdt_to_pydt(candles["result"][-1]["T"])
 				try:
-					r = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
+					RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
 				except RsiModel.DoesNotExist:
-					r = RsiModel(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
-					r.save()
+					RsiModel.objects.create(market = market_name, ave_gain = ave_gain, ave_loss = ave_loss, datetime = last_candle_dt)
 
 		row_data = {
 			"MarketName": market_name,
