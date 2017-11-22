@@ -28,7 +28,7 @@
 
 		var isRescan = false;
 
-		(function update() {
+		function updateTable() {
 			$.ajax({
 				url: "{% url 'scan' %}",
 				type: "GET",
@@ -58,12 +58,28 @@
 
 					$("#table-body").empty();
 					$("#table-body").html(rowHtml);
+					isRescan = true;
 				}
-			}).then(function() {
-				isRescan = true;
-				setTimeout(update, 10000); // Execute upda
 			})
+		};
+
+		(function update() {
+			updateTable();
+			setTimeout(update, 10000);
 		})();
+
+		// (function update() {
+		// 	$.ajax({
+		// 		url: "https://api.coinmarketcap.com/v1/ticker/bitcoin/",
+		// 		type: "GET",
+		// 		dataType: "json",
+		// 		success: function(response) {
+		// 			btc_change_24hr = response[0]["percent_change_24h"]
+		// 		}
+		// 	})
+		// })();
+
+
 
 	</script>
 {% endblock %}
