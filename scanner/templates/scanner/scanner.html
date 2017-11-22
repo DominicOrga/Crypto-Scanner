@@ -3,7 +3,6 @@
 {% block title %} Scanner {% endblock %}
 
 {% block body %}
-
 	<br>
 	<div align="center">
 		<div style="display: inline-block; text-align: left;">
@@ -22,7 +21,8 @@
 						<th> Last </th>
 						<th> Previous Day </th>
 						<th> % Change (24h) </th>
-						<th> % Change (14h) </th>
+						<th> % Change (12h) </th>
+						<th> % Change (6h) </th>
 						<th> RSI </th>
 					</tr>
 				</thead>
@@ -37,6 +37,9 @@
 	<script type="text/javascript">
 
 		var isRescan = false;
+
+		// URLs 
+		var updateTableListeners = []
 
 		function updateTable() {
 			$.ajax({
@@ -53,11 +56,12 @@
 					for (i = 0; i < rowData.length; i++) {
 						var row = rowData[i];
 
-						if (row["Change24Hr"] >= 0.05 && row["Change14Hr"] >= 0 && row["RSI"] <= 25)
-							rowHtml += "<tr bgcolor='#FFFFCC'>"; 
-						else
-							rowHtml += "<tr bgcolor='" + (i % 2 == 0 ? "WhiteSmoke" : "White") + "'>";
+						// if (row["Change24H"] >= 0.05 && row["Change12Hr"] >= 0 && row["RSI"] <= 25)
+						// 	rowHtml += "<tr bgcolor='#FFFFCC'>"; 
+						// else
+						// 	rowHtml += "<tr bgcolor='" + (i % 2 == 0 ? "WhiteSmoke" : "White") + "'>";
 
+						rowHtml += "<tr bgcolor='" + (i % 2 == 0 ? "WhiteSmoke" : "White") + "'>";
 						rowHtml += "<td>" + row["MarketName"] + "</td>";
 						rowHtml += "<td>" + row["BaseVolume"].toFixed(3) + "</td>";
 						rowHtml += "<td>" + row["Bid"].toFixed(8) + "</td>";
@@ -65,11 +69,14 @@
 						rowHtml += "<td>" + row["Last"].toFixed(8) + "</td>";
 						rowHtml += "<td>" + row["PrevDay"].toFixed(8) + "</td>";
 
-						change24H = row["Change24Hr"]
+						change24H = row["Change24H"]
 						rowHtml += "<td><font color='" + (change24H >= 0 ? "green" : "red") + "'>" + (change24H * 100).toFixed(1) + "%" + "</font></td>";
 
-						change14H = row["Change14Hr"]
-						rowHtml += "<td><font color='" + (change14H >= 0 ? "green" : "red") + "'>" + (change14H * 100).toFixed(1) + "%" + "</font></td>";
+						change12H = row["Change12H"]
+						rowHtml += "<td><font color='" + (change12H >= 0 ? "green" : "red") + "'>" + (change12H * 100).toFixed(1) + "%" + "</font></td>";
+
+						change6H = row["Change6H"]
+						rowHtml += "<td><font color='" + (change6H >= 0 ? "green" : "red") + "'>" + (change6H * 100).toFixed(1) + "%" + "</font></td>";
 
 						rsi = row["RSI"]
 						if (rsi >= 70 || rsi <= 25)
@@ -107,6 +114,8 @@
 			updateBTCPriceChange();
 			setTimeout(update, 10000);
 		})();
+
+		
 
 	</script>
 {% endblock %}

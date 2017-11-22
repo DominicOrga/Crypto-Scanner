@@ -41,11 +41,13 @@ def scan(request):
 		price_chg_24 = (last - prevDay) / prevDay 
 		market_name = summary["MarketName"]
 
-		price_chg_14 = 0
+		price_chg_12 = 0
+		price_chg_6 = 0
 		candles = btx.get_candles(market_name, bittrex.TICKINTERVAL_HOUR)
 		if (candles["success"]):
-			# Not 13 because the other hour is attributed to the current price
-			price_chg_14 = (last - candles["result"][-13]["L"]) / candles["result"][-13]["L"] 
+			# Not 12 or 6 because the other hour is attributed to the current price
+			price_chg_12 = (last - candles["result"][-11]["L"]) / candles["result"][-11]["L"] 
+			price_chg_6 = (last - candles["result"][-5]["L"]) / candles["result"][-5]["L"]
 
 		rsi = 0
 		candles = btx.get_candles(market_name, bittrex.TICKINTERVAL_ONEMIN)
@@ -91,8 +93,9 @@ def scan(request):
 			"Ask": 		  summary["Ask"],
 			"Last": 	  last,
 			"PrevDay": 	  prevDay,
-			"Change24Hr": price_chg_24,
-			"Change14Hr": price_chg_14,
+			"Change24H": price_chg_24,
+			"Change12H": price_chg_12,
+			"Change6H":  price_chg_6,
 			"RSI":		  last_rsi
 		}
 
