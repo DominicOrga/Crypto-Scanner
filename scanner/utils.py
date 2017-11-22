@@ -26,8 +26,8 @@ def rsi(close_prices):
 	return ave_gain, ave_loss, rsi
 
 def update_rsi(ave_gain, ave_loss, price_change):
-	ave_gain = (ave_gain * 13 + (price_change if (price_change > 0) else 0)) / 14
-	ave_loss = (ave_loss * 13 + (-price_change if (price_change < 0) else 0)) / 14
+	new_ave_gain = (ave_gain * 13 + (price_change if (price_change > 0) else 0)) / 14
+	new_ave_loss = (ave_loss * 13 + (-price_change if (price_change < 0) else 0)) / 14
 
 	if ave_gain == 0:	
 		rsi = 0
@@ -37,7 +37,7 @@ def update_rsi(ave_gain, ave_loss, price_change):
 		rs = ave_gain / ave_loss	
 		rsi = 100 - 100 / (1 + rs)
 
-	return ave_gain, ave_loss, rsi
+	return new_ave_gain, new_ave_loss, rsi
 
 def btxdt_to_pydt(btx_dt):
 	t = time.strptime(btx_dt, "%Y-%m-%dT%H:%M:%S")

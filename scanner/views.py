@@ -56,12 +56,16 @@ def scan(request):
 			if request.GET["isRescan"] == "true":
 				try:
 					p = RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
-					rs = p.ave_gain / p.ave_loss
-					rsi = 100 - 100 / (1 + rs)
+
+					price_chg = last - candles_reduced[-1]["L"]
+					last_ave_gain, last_ave_loss, last_rsi = scannerutil.update_rsi(p.ave_gain, p.ave_loss, price_chg)
 
 				except RsiModel.DoesNotExist:
 					candle_last_prices = [c["L"] for c in candles_reduced]
 					ave_gain, ave_loss, rsi = scannerutil.rsi(candle_last_prices)
+
+					price_chg = last - candle_last_prices[-1]
+					last_ave_gain, last_ave_loss, last_rsi = scannerutil.update_rsi(ave_gain, ave_loss, price_chg)
 
 					try:
 						RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
@@ -71,6 +75,9 @@ def scan(request):
 			else:
 				candle_last_prices = [c["L"] for c in candles_reduced]
 				ave_gain, ave_loss, rsi = scannerutil.rsi(candle_last_prices)
+
+				price_chg = last - candle_last_prices[-1]
+				last_ave_gain, last_ave_loss, last_rsi = scannerutil.update_rsi(ave_gain, ave_loss, price_chg)
 
 				try:
 					RsiModel.objects.get(market = market_name, datetime = last_candle_dt)
@@ -86,7 +93,7 @@ def scan(request):
 			"PrevDay": 	  prevDay,
 			"Change24Hr": price_chg_24,
 			"Change14Hr": price_chg_14,
-			"RSI":		  rsi
+			"RSI":		  last_rsi
 		}
 
 		table.append(row_data)
