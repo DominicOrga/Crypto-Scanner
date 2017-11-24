@@ -28,4 +28,4 @@ class MarketModel(models.Model):
 	rsi  = models.FloatField()
 
 class MarketGroupModel(models.Model):
-	scanner_records = models.ManyToManyField(MarketModel)
+	markets = models.ManyToManyField(MarketModel)

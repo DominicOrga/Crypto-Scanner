@@ -7,4 +7,4 @@ urlpatterns = [
 	url(r'^rescan/', views.scan, name="scan")
 ]
 
-services.TestServiceSingleton().run()
+services.MarketUpdate().run()
