@@ -45,7 +45,6 @@ def scan(request):
 		price_chg_6 = 0
 		candles = btx.get_candles(market_name, bittrex.TICKINTERVAL_HOUR)
 		if (candles["success"]):
-			# Not 12 or 6 because the other hour is attributed to the current price
 			price_chg_12 = (last - candles["result"][-11]["L"]) / candles["result"][-11]["L"] 
 			price_chg_6 = (last - candles["result"][-5]["L"]) / candles["result"][-5]["L"]
 
