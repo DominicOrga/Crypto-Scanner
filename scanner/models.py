@@ -42,7 +42,7 @@ class MarketGroupModel(models.Model):
 	markets = models.ManyToManyField(MarketModel)
 
 	def __str__(self):
-		return " ".join(m.market[4:] for m in self.markets.all())
+		return str(self.id) + " " + " ".join(m.market[4:] for m in self.markets.all())
 
 	def save(self, *args, **kwargs):
 		objects = MarketGroupModel.objects.all()

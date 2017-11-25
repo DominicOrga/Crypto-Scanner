@@ -17,9 +17,6 @@ def rsi(close_prices):
 	ave_gain /= 14
 	ave_loss /= -14
 
-	print("first ave gain: " + str(ave_gain))
-	print("first ave loss: " + str(ave_loss))
-
     # Compute for succeeding average gain and loss
 	for i in range(14, len(close_prices)):
 

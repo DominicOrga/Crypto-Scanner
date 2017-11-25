@@ -36,8 +36,6 @@
 {% block javascript %}
 	<script type="text/javascript">
 
-		var isRescan = false;
-
 		// URLs 
 		var updateTableListeners = []
 
@@ -45,7 +43,6 @@
 			$.ajax({
 				url: "{% url 'scan' %}",
 				type: "GET",
-				data: { isRescan },
 				dataType: "json",
 				success: function(response) {
 
@@ -56,29 +53,24 @@
 					for (i = 0; i < rowData.length; i++) {
 						var row = rowData[i];
 
-						// if (row["Change24H"] >= 0.05 && row["Change12Hr"] >= 0 && row["RSI"] <= 25)
-						// 	rowHtml += "<tr bgcolor='#FFFFCC'>"; 
-						// else
-						// 	rowHtml += "<tr bgcolor='" + (i % 2 == 0 ? "WhiteSmoke" : "White") + "'>";
-
 						rowHtml += "<tr bgcolor='" + (i % 2 == 0 ? "WhiteSmoke" : "White") + "'>";
-						rowHtml += "<td>" + row["MarketName"] + "</td>";
-						rowHtml += "<td>" + row["BaseVolume"].toFixed(3) + "</td>";
-						rowHtml += "<td>" + row["Bid"].toFixed(8) + "</td>";
-						rowHtml += "<td>" + row["Ask"].toFixed(8) + "</td>";
-						rowHtml += "<td>" + row["Last"].toFixed(8) + "</td>";
-						rowHtml += "<td>" + row["PrevDay"].toFixed(8) + "</td>";
+						rowHtml += "<td>" + row["market"] + "</td>";
+						rowHtml += "<td>" + row["base_volume"].toFixed(3) + "</td>";
+						rowHtml += "<td>" + row["bid"].toFixed(8) + "</td>";
+						rowHtml += "<td>" + row["ask"].toFixed(8) + "</td>";
+						rowHtml += "<td>" + row["last"].toFixed(8) + "</td>";
+						rowHtml += "<td>" + row["previous_day"].toFixed(8) + "</td>";
 
-						change24H = row["Change24H"]
+						change24H = row["change_24h"]
 						rowHtml += "<td><font color='" + (change24H >= 0 ? "green" : "red") + "'>" + (change24H * 100).toFixed(1) + "%" + "</font></td>";
 
-						change12H = row["Change12H"]
+						change12H = row["change_12h"]
 						rowHtml += "<td><font color='" + (change12H >= 0 ? "green" : "red") + "'>" + (change12H * 100).toFixed(1) + "%" + "</font></td>";
 
-						change6H = row["Change6H"]
+						change6H = row["change_6h"]
 						rowHtml += "<td><font color='" + (change6H >= 0 ? "green" : "red") + "'>" + (change6H * 100).toFixed(1) + "%" + "</font></td>";
 
-						rsi = row["RSI"]
+						rsi = row["rsi"]
 						if (rsi >= 70 || rsi <= 25)
 							rowHtml += "<td><font color='" + (rsi >= 70 ? "green" : "red") + "'>" + rsi.toFixed(2) + "</font></td>";
 						else
@@ -89,7 +81,6 @@
 
 					$("#table-body").empty();
 					$("#table-body").html(rowHtml);
-					isRescan = true;
 				}
 			})
 		};

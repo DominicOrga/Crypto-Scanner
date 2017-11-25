@@ -32,7 +32,6 @@ class MarketUpdate(object):
 		self.__is_running = True
 
 	def scan(self, rescan = False):
-
 		btx = bittrex.Bittrex(bittrex.API_KEY, bittrex.API_SECRET, api_version = bittrex.API_V2_0)
 
 		market_summaries = btx.get_market_summaries()
@@ -51,6 +50,7 @@ class MarketUpdate(object):
 		markets = sorted(markets, key = lambda x: x["Summary"]["BaseVolume"], reverse = True)
 
 		for ms in markets:
+			pass
 			summary = ms["Summary"]
 
 			last = summary["Last"]
@@ -61,13 +61,15 @@ class MarketUpdate(object):
 			price_chg_12 = 0
 			price_chg_6 = 0
 			candles = btx.get_candles(market_name, bittrex.TICKINTERVAL_HOUR)
+
 			if (candles["success"]):
 				# Not 12 or 6 because the other hour is attributed to the current price
 				price_chg_12 = (last - candles["result"][-11]["L"]) / candles["result"][-11]["L"] 
 				price_chg_6 = (last - candles["result"][-5]["L"]) / candles["result"][-5]["L"]
 
-			rsi = 0
+			last_rsi = 0
 			candles = btx.get_candles(market_name, bittrex.TICKINTERVAL_ONEMIN)
+
 			if (candles["success"]):
 				candles_reduced = candles["result"][-250 : len(candles["result"])]
 				last_candle_dt = scannerutil.btxdt_to_pydt(candles_reduced[-1]["T"])
