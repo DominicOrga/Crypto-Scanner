@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.db.models.query import QuerySet
 from libs.bittrexlib import bittrex
 from scanner import utils as scanner
-from scanner.models import RsiModel
+from scanner.models import RsiModel, MarketModel, MarketGroupModel
 
 import datetime
 import time
@@ -16,7 +16,6 @@ class UtilTest(TestCase):
 						45.64, 46.21]
 
 		a, b, c = scanner.rsi(close_prices)
-		print("out: " + str(c))
 		self.assertTrue(abs(c - 62.93) < 1)
 
 		a, b, c = scanner.update_rsi(a, b, 46.25 - close_prices[-1])
@@ -65,7 +64,18 @@ class RsiModelTest(TestCase):
 
 		# populate original records
 		RsiModel.objects.all().delete()
-		for i in range(len(b)):
-			b[i].save()
+		RsiModel.objects.bulk_create(b)
 
 		self.assertEquals(RsiModel.objects.all().count(), c)
+
+class MarketGroupModelTest(TestCase):
+
+	def test_delete_cascade(self):
+		pass
+		# market_copy = list(MarketModel.objects.all())
+		# marketgroup_copy = list(MarketGroupModel.objects.all())
+
+
+		# MarketGroupModel.objects.all().delete()
+		# MarketModel.objects.all().delete()
+
