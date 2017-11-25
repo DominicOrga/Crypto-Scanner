@@ -53,7 +53,6 @@ class RsiModelTest(TestCase):
 	def test_table_limit(self):
 
 		b = list(RsiModel.objects.all()) # backup records
-		c = len(b)
 
 		for i in range(300):
 			dt = datetime.datetime(2012, 2, 3, 4, 4, 3) # Y m d H M S
@@ -66,16 +65,36 @@ class RsiModelTest(TestCase):
 		RsiModel.objects.all().delete()
 		RsiModel.objects.bulk_create(b)
 
-		self.assertEquals(RsiModel.objects.all().count(), c)
+		self.assertEquals(RsiModel.objects.all().count(), len(b))
 
 class MarketGroupModelTest(TestCase):
 
 	def test_delete_cascade(self):
-		pass
-		# market_copy = list(MarketModel.objects.all())
-		# marketgroup_copy = list(MarketGroupModel.objects.all())
+		market_copy = list(MarketModel.objects.all())
+		marketgroup_copy = list(MarketGroupModel.objects.all())
 
+		MarketModel.objects.all().delete()
+		MarketGroupModel.objects.all().delete()
 
-		# MarketGroupModel.objects.all().delete()
-		# MarketModel.objects.all().delete()
+		self.assertEquals(MarketModel.objects.all().count(), 0)
+		self.assertEquals(MarketGroupModel.objects.all().count(), 0)
 
+		mg = MarketGroupModel.objects.create()
+
+		for i in range(5):
+			m = MarketModel.objects.create(market="BTC-ETH", base_volume=1, bid=1, ask=1, last=1, previous_day=1, change_24h=1, change_12h=1, change_6h=1, rsi=1)
+			mg.markets.add(m)
+
+		self.assertEquals(MarketGroupModel.objects.all().count(), 1)
+		self.assertEquals(MarketModel.objects.all().count(), 5)
+
+		mg.delete()
+
+		self.assertEquals(MarketGroupModel.objects.all().count(), 0)
+		self.assertEquals(MarketModel.objects.all().count(), 0)
+
+		MarketModel.objects.bulk_create(market_copy)
+		MarketGroupModel.objects.bulk_create(marketgroup_copy)
+
+		self.assertEquals(MarketModel.objects.all().count(), len(market_copy))
+		self.assertEquals(MarketGroupModel.objects.all().count(), len(marketgroup_copy))
