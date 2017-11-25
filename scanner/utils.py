@@ -17,6 +17,9 @@ def rsi(close_prices):
 	ave_gain /= 14
 	ave_loss /= -14
 
+	print("first ave gain: " + str(ave_gain))
+	print("first ave loss: " + str(ave_loss))
+
     # Compute for succeeding average gain and loss
 	for i in range(14, len(close_prices)):
 
@@ -29,12 +32,12 @@ def update_rsi(ave_gain, ave_loss, price_change):
 	new_ave_gain = (ave_gain * 13 + (price_change if (price_change > 0) else 0)) / 14
 	new_ave_loss = (ave_loss * 13 + (-price_change if (price_change < 0) else 0)) / 14
 
-	if ave_gain == 0:	
+	if new_ave_gain == 0:	
 		rsi = 0
-	elif ave_loss == 0:
+	elif new_ave_loss == 0:
 		rsi = 100
 	else:
-		rs = ave_gain / ave_loss	
+		rs = new_ave_gain / new_ave_loss	
 		rsi = 100 - 100 / (1 + rs)
 
 	return new_ave_gain, new_ave_loss, rsi

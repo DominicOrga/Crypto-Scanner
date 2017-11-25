@@ -16,6 +16,7 @@ class UtilTest(TestCase):
 						45.64, 46.21]
 
 		a, b, c = scanner.rsi(close_prices)
+		print("out: " + str(c))
 		self.assertTrue(abs(c - 62.93) < 1)
 
 		a, b, c = scanner.update_rsi(a, b, 46.25 - close_prices[-1])

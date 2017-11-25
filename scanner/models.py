@@ -35,3 +35,10 @@ class MarketGroupModel(models.Model):
 
 	def __str__(self):
 		return " ".join(m.market[4:] for m in self.markets.all())
+
+	def delete(self, *args, **kwargs):
+
+		for m in self.markets.all():
+			m.delete()
+		
+		super(MarketGroupModel, self).delete(*args, **kwargs)
