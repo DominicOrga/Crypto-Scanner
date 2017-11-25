@@ -27,5 +27,11 @@ class MarketModel(models.Model):
 	change_6h = models.FloatField()
 	rsi  = models.FloatField()
 
+	def __str__(self):
+		return self.market
+
 class MarketGroupModel(models.Model):
 	markets = models.ManyToManyField(MarketModel)
+
+	def __str__(self):
+		return " ".join(m.market[4:] for m in self.markets.all())
