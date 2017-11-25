@@ -8,12 +8,14 @@ class RsiModel(models.Model):
 	datetime = models.DateTimeField()
 
 	def save(self, *args, **kwargs):
-		objects = RsiModel.objects.all()
+		super(RsiModel, self).save(*args, **kwargs)
 
-		if objects.count() >= 200:
+		objects = RsiModel.objects.all()
+		excess = objects.count() - 200
+
+		for i in range(excess):
 			objects.first().delete()
 
-		super(RsiModel, self).save(*args, **kwargs)
 
 class MarketModel(models.Model):
 	market = models.CharField(max_length = 11, default = "")
@@ -31,12 +33,14 @@ class MarketModel(models.Model):
 		return self.market
 
 	def save(self, *args, **kwargs):
-		objects = MarketModel.objects.all()
+		super(MarketModel, self).save(*args, **kwargs)
 
-		if objects.count() >= 200:
+		objects = MarketModel.objects.all()
+		excess = objects.count() - 200
+
+		for i in range(excess):
 			objects.first().delete()
 
-		super(MarketModel, self).save(*args, **kwargs)
 
 class MarketGroupModel(models.Model):
 	markets = models.ManyToManyField(MarketModel)
@@ -45,12 +49,13 @@ class MarketGroupModel(models.Model):
 		return str(self.id) + " " + " ".join(m.market[4:] for m in self.markets.all())
 
 	def save(self, *args, **kwargs):
-		objects = MarketGroupModel.objects.all()
-
-		if objects.count() >= 5:
-			objects.first().delete()
-
 		super(MarketGroupModel, self).save(*args, **kwargs)
+
+		objects = MarketGroupModel.objects.all()
+		excess = objects.count() - 10
+
+		for i in range(excess):
+			objects.first().delete()
 
 	def delete(self, *args, **kwargs):
 
