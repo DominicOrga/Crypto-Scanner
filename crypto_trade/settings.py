@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'strata',
     'scanner',
     'django_celery_results',
     'django.contrib.admin',

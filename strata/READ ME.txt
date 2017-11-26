@@ -1,0 +1,22 @@
+This strategy is an implimentation of bottom reversal strategy, with the premise that a bullish security that suddenly oversold itself would likely bounce back up. 
+
+Buy Signals:
+	1. If RSI <= 25
+	2. If altcoin change_24h >= 5% and change_12h > 2.5% and change_6h > 0%
+
+Sell Signal:
+	1. Stop Loss:
+		1.1 altcoin holdings duration > 30m
+		1.2 altcoin <= altcoin (0.98)
+	2. Target Price:
+		2.1 If altcoin price > altcoin (1.04)
+				set stop loss = altcoin (1.04)
+				set target price = altcoin (1.06)
+
+				If altcoin price > altcoin (1.06)
+					set stop loss = altcoin (1.06)
+					set target price = altcoin (1.08)
+
+				If altcoin price > altcoin (1.08)
+					set stop loss = altcoin (1.08)
+					set target price = altcoin (1.10)
