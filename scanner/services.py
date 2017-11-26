@@ -18,11 +18,15 @@ class MarketUpdate(object):
 		if (self.__is_running):
 			return
 
+		print("Service Market Update Initialized...")
+
 		def daemon():
 			rescan = False
 			while True:
+				print("Service Market Update Executed...")
 				self.scan(rescan = rescan)
 				rescan = True
+				print("Service Market Update Finished...")
 				time.sleep(10)
 
 		th = threading.Thread(target = daemon)
