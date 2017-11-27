@@ -1,5 +1,6 @@
 import threading
 import time
+import datetime
 from libs.bittrexlib import bittrex
 from .models import RsiModel, MarketModel, MarketGroupModel
 from . import utils as scannerutil
@@ -36,6 +37,9 @@ class MarketUpdate(object):
 		self.__is_running = True
 
 	def scan(self, rescan = False):
+
+		st = datetime.datetime.utcnow()
+
 		btx = bittrex.Bittrex(bittrex.API_KEY, bittrex.API_SECRET, api_version = bittrex.API_V2_0)
 
 		market_summaries = btx.get_market_summaries()
@@ -124,5 +128,6 @@ class MarketUpdate(object):
 			m.save()
 			table.append(m)
 
-		marketgroup = MarketGroupModel.objects.create()
+		ft = st - datetime.datetime.utcnow()
+		marketgroup = MarketGroupModel.objects.create(creation_delay_ms = scannerutil.deltatime_millis(ft))
 		marketgroup.markets.set(table)

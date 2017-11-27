@@ -44,3 +44,11 @@ def btxdt_to_pydt(btx_dt):
 	dt = datetime.datetime.fromtimestamp(time.mktime(t))
 
 	return dt
+
+def deltatime_millis(deltatime):
+	d_ms = deltatime.days * 24 * 60 * 1000
+	s_ms = deltatime.seconds * 1000
+	m_ms = deltatime.microseconds / 1000
+
+	return d_ms + s_ms + m_ms
+ 
