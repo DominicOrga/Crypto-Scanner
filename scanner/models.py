@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 # Create your models here.
 class RsiModel(models.Model):
 	market = models.CharField(max_length = 11, default = "")
@@ -43,6 +43,7 @@ class MarketModel(models.Model):
 
 
 class MarketGroupModel(models.Model):
+	datetime = models.DateTimeField(default = timezone.now)
 	markets = models.ManyToManyField(MarketModel)
 
 	def __str__(self):
