@@ -54,37 +54,37 @@
 				dataType: "json",
 				success: function(response) {
 
-					var rowData = response['table'];
+					var markets = response['market_group']['markets'];
 
-					var rowHtml = "";
+					var html = "";
 
-					for (i = 0; i < rowData.length; i++) {
-						var row = rowData[i];
+					for (i = 0; i < markets.length; i++) {
+						var market = markets[i];
 
-						rowHtml += "<tr bgcolor='" + (i % 2 == 0 ? "WhiteSmoke" : "White") + "'>";
-						rowHtml += "<td>" + row["market"] + "</td>";
-						rowHtml += "<td>" + row["base_volume"].toFixed(3) + "</td>";
-						rowHtml += "<td>" + row["bid"].toFixed(8) + "</td>";
-						rowHtml += "<td>" + row["ask"].toFixed(8) + "</td>";
-						rowHtml += "<td>" + row["last"].toFixed(8) + "</td>";
-						rowHtml += "<td>" + row["previous_day"].toFixed(8) + "</td>";
+						html += "<tr bgcolor='" + (i % 2 == 0 ? "WhiteSmoke" : "White") + "'>";
+						html += "<td>" + market["market"] + "</td>";
+						html += "<td>" + market["base_volume"].toFixed(3) + "</td>";
+						html += "<td>" + market["bid"].toFixed(8) + "</td>";
+						html += "<td>" + market["ask"].toFixed(8) + "</td>";
+						html += "<td>" + market["last"].toFixed(8) + "</td>";
+						html += "<td>" + market["previous_day"].toFixed(8) + "</td>";
 
-						change24H = row["change_24h"]
-						rowHtml += "<td><font color='" + (change24H >= 0 ? "green" : "red") + "'>" + (change24H * 100).toFixed(1) + "%" + "</font></td>";
+						change24H = market["change_24h"]
+						html += "<td><font color='" + (change24H >= 0 ? "green" : "red") + "'>" + (change24H * 100).toFixed(1) + "%" + "</font></td>";
 
-						change12H = row["change_12h"]
-						rowHtml += "<td><font color='" + (change12H >= 0 ? "green" : "red") + "'>" + (change12H * 100).toFixed(1) + "%" + "</font></td>";
+						change12H = market["change_12h"]
+						html += "<td><font color='" + (change12H >= 0 ? "green" : "red") + "'>" + (change12H * 100).toFixed(1) + "%" + "</font></td>";
 
-						change6H = row["change_6h"]
-						rowHtml += "<td><font color='" + (change6H >= 0 ? "green" : "red") + "'>" + (change6H * 100).toFixed(1) + "%" + "</font></td>";
+						change6H = market["change_6h"]
+						html += "<td><font color='" + (change6H >= 0 ? "green" : "red") + "'>" + (change6H * 100).toFixed(1) + "%" + "</font></td>";
 
-						rsi = row["rsi"]
+						rsi = market["rsi"]
 						if (rsi >= 70 || rsi <= 25)
-							rowHtml += "<td><font color='" + (rsi >= 70 ? "green" : "red") + "'>" + rsi.toFixed(2) + "</font></td>";
+							html += "<td><font color='" + (rsi >= 70 ? "green" : "red") + "'>" + rsi.toFixed(2) + "</font></td>";
 						else
-							rowHtml += "<td>" + rsi.toFixed(2) + "</td>";
+							html += "<td>" + rsi.toFixed(2) + "</td>";
 
-						rowHtml += "</tr>";
+						html += "</tr>";
 					}
 
 					$("#market-update-delay").empty();
@@ -95,7 +95,7 @@
 					$("#market-update-delay").html(html);
 
 					$("#table-body").empty();
-					$("#table-body").html(rowHtml);
+					$("#table-body").html(html);
 				}
 			})
 		};
