@@ -3,41 +3,39 @@
 {% block title %} Scanner {% endblock %}
 
 {% block body %}
-	<br>
 	<div align="center">
-		<div style="display: inline-block; text-align: left;">
-			<h7> 
+		<div style="text-align: left; margin-right: 5%; margin-left: 5%">
+			<p class="field"> 
 				BTC Change (24h):
-				<h7 id="btc-change-24h"> </h7> 
-			</h7>
+				<p class="field" id="btc-change-24h"> </p> 
+			</p>
 		
-			<br><br>
+			<div style="text-align: right;">
+				<div style="overflow-x:auto;">
+					<table class="table table-bordered table-condensed table-striped">
+						<thead>
+							<tr>
+								<th> Market </th>
+								<th> Base Volume (24h) </th>
+								<th> Bid </th>
+								<th> Ask </th>
+								<th> Last </th>
+								<th> Previous Day </th>
+								<th> % Change (24h) </th>
+								<th> % Change (12h) </th>
+								<th> % Change (6h) </th>
+								<th> RSI </th>
+							</tr>
+						</thead>
 
-			<div style="text-align: right">
+						<tbody id="table-body" />
+					</table> 
+				</div>
 
-				<table class="table-bordered table container-fluid" style="border-collapse: collapse;">
-					<thead>
-						<tr>
-							<th> Market </th>
-							<th> Base Volume (24h) </th>
-							<th> Bid </th>
-							<th> Ask </th>
-							<th> Last </th>
-							<th> Previous Day </th>
-							<th> % Change (24h) </th>
-							<th> % Change (12h) </th>
-							<th> % Change (6h) </th>
-							<th> RSI </th>
-						</tr>
-					</thead>
-
-					<tbody id="table-body" />
-				</table> 
-
-				<h7> 
+				<p class="field"> 
 					Market Update Delay (ms):
-					<h7 id="market-update-delay"> </h7> 
-				</h7>
+					<p class="field" id="market-update-delay"> </p> 
+				</p>
 			</div>
 		</div>
 	</div>
