@@ -17,7 +17,7 @@ def scan(request):
 	try:
 		market_group = MarketGroupModel.objects.last()
 		table = [model_to_dict(m) for m in market_group.markets.all()]
-		return JsonResponse({'table': table})
+		return JsonResponse({ 'table': table, 'creation_delay_ms': market_group.creation_delay_ms })
 
 	except MarketGroupModel.DoesNotExist:
-		return JsonResponse({'table': market_group})
+		JsonResponse({ 'table': {} })

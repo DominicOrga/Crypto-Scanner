@@ -128,6 +128,6 @@ class MarketUpdate(object):
 			m.save()
 			table.append(m)
 
-		ft = st - datetime.datetime.utcnow()
+		ft = datetime.datetime.utcnow() - st
 		marketgroup = MarketGroupModel.objects.create(creation_delay_ms = scannerutil.deltatime_millis(ft))
 		marketgroup.markets.set(table)
