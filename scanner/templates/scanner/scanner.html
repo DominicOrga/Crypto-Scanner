@@ -11,6 +11,8 @@
 				<h7 id="btc-change-24h"> </h7> 
 			</h7>
 		
+			<br><br>
+
 			<div style="text-align: right">
 
 				<table class="table-bordered table" style="border-collapse: collapse;">
@@ -88,7 +90,11 @@
 					}
 
 					$("#market-update-delay").empty();
-					$("#market-update-delay").html(response['creation_delay_ms'] + " ms");
+
+					delay = response["creation_delay_ms"]
+					html = "<font color='" + (delay < 30000 ? "green" : "red") + "'>" + delay.toLocaleString("en") + " ms" + "</font>";
+
+					$("#market-update-delay").html(html);
 
 					$("#table-body").empty();
 					$("#table-body").html(rowHtml);

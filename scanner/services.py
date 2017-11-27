@@ -28,7 +28,7 @@ class MarketUpdate(object):
 				self.scan(rescan = rescan)
 				rescan = True
 				print("Service Market Update Finished...")
-				time.sleep(10)
+				time.sleep(1)
 
 		th = threading.Thread(target = daemon)
 		th.daemon = True
