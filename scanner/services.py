@@ -6,6 +6,18 @@ from .models import RsiModel, MarketModel, MarketGroupModel
 from . import utils as scannerutil
 
 class MarketUpdate(object):
+	""" Service to gather market data from bittrex and coinmarketcap.
+		
+		A singleton service executed every second to gather raw market data, which is 
+		then processed to output a filtered set of market data.
+
+		Console Logs:
+			Service Market Update Initialized: Displayed when the service starts.
+			Service Market Update Executed:    Displayed when the service is executed every 
+											   after one second.
+			Service Market Update Finished:	   Displayed when the service execution ends.
+	"""
+
 	__instance = None
 	__is_running = False
 
@@ -49,7 +61,7 @@ class MarketUpdate(object):
 
 		table = []
 
-		# Filter markets
+		""" Filter markets """
 		markets = market_summaries["result"]
 		markets = [ms for ms in markets 
 					if ms["Market"]["BaseCurrency"] == "BTC" and 
@@ -71,7 +83,7 @@ class MarketUpdate(object):
 			candles = btx.get_candles(market_name, bittrex.TICKINTERVAL_HOUR)
 
 			if (candles["success"]):
-				# Not 12 or 6 because the other hour is attributed to the current price
+				""" Not 12 or 6 because the other hour is attributed to the current price """
 				price_chg_12 = (last - candles["result"][-11]["L"]) / candles["result"][-11]["L"] 
 				price_chg_6 = (last - candles["result"][-5]["L"]) / candles["result"][-5]["L"]
 
@@ -131,3 +143,48 @@ class MarketUpdate(object):
 		ft = datetime.datetime.utcnow() - st
 		marketgroup = MarketGroupModel.objects.create(creation_delay_ms = scannerutil.deltatime_millis(ft))
 		marketgroup.markets.set(table)
+
+class MarketGroupModelCleanup(object):
+	""" Service to delete Market Group Model records older than 30 days. """
+
+	__instance = None
+	__is_running = False
+
+	def __new__(cls):
+		if cls.__instance is None:
+			cls.__instance = object.__new__(cls)
+
+		return cls.__instance
+
+	def run(self):
+		if (self.__is_running):
+			return
+
+		print("Service Market Group Model Cleanup Initialized...")
+
+		def daemon():
+			rescan = False
+			while True:
+				print("Service Market Group Model Cleanup Executed...")
+				self.clean()
+				rescan = True
+				print("Service Market Group Model Cleanup Finished...")
+				 
+				""" Sleep for one day """
+				time.sleep(86400)
+
+		th = threading.Thread(target = daemon)
+		th.daemon = True
+		th.start()
+
+		self.__is_running = True
+
+	def clean(self):
+		dt_now = datetime.datetime.utcnow() 
+		dt_last_month = dt_now - datetime.timedelta(30)
+
+		try:
+			res = MarketGroupModel.objects.filter(datetime_created__lt = dt_last_month)
+			res.delete()
+		except MarketGroupModel.DoesNotExist:
+			pass
