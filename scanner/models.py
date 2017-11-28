@@ -16,7 +16,6 @@ class RsiModel(models.Model):
 		for i in range(excess):
 			objects.first().delete()
 
-
 class MarketModel(models.Model):
 	market = models.CharField(max_length = 11, default = "")
 	base_volume = models.FloatField()

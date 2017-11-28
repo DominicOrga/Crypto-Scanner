@@ -145,7 +145,7 @@ class MarketUpdate(object):
 		marketgroup.markets.set(table)
 
 class MarketGroupModelCleanup(object):
-	""" Service to delete Market Group Model records older than 30 days. """
+	""" Service to delete Market Group Model records older than 15 days. """
 
 	__instance = None
 	__is_running = False
@@ -181,7 +181,7 @@ class MarketGroupModelCleanup(object):
 
 	def clean(self):
 		dt_now = datetime.datetime.utcnow() 
-		dt_last_month = dt_now - datetime.timedelta(30)
+		dt_last_month = dt_now - datetime.timedelta(15)
 
 		try:
 			res = MarketGroupModel.objects.filter(datetime_created__lt = dt_last_month)
