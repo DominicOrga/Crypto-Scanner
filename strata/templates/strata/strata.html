@@ -28,4 +28,60 @@
 		</div>
 	</div>
 
+	<br>
+
+	<div align="center">
+		<div style="text-align: left; margin-right: 5%; margin-left: 5%">
+			<p class="no-linebreak" style="font-size: 3em;"> 
+				RECENT MARKETS
+			</p>
+		
+			<div style="text-align: right;">
+				<div style="overflow-x:auto;">
+					<table class="table table-bordered table-condensed table-striped">
+						<thead>
+							<tr>
+								<th> Datetime Created </th>
+								<th> Market </th>
+								<th> Base Volume (24h) </th>
+								<th> Bid </th>
+								<th> Ask </th>
+								<th> Last </th>
+								<th> Previous Day </th>
+								<th> % Change (24h) </th>
+								<th> % Change (12h) </th>
+								<th> % Change (6h) </th>
+								<th> RSI </th>
+							</tr>
+						</thead>
+
+						<tbody id="table-body" />
+					</table> 
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+		
+		function updateTables() {
+			$.ajax({
+				url: "{% url 'strata_markets' %}",
+				type: "GET",
+				dataType: "json",
+				success: function(response) {
+					console.log("hello");
+				}
+			});
+		};
+
+		periodicFunctions.push(updateTables);
+
+	</script>
+
+
 {% endblock %}

@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.load_strata, name = "strata"),
-	url(r'^processed_data$', views.processed_data, name="processed_data")
+	url(r'^stratamarkets$', views.strata_markets, name="strata_markets")
 ]
