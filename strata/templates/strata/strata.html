@@ -74,7 +74,12 @@
 				type: "GET",
 				dataType: "json",
 				success: function(response) {
-					console.log("hello");
+					html = "";
+
+					markets = response["markets"];
+					
+					for (i = 0; i < markets.length; i++)
+						console.log(markets[i]["is_recent"])
 				}
 			});
 		};
