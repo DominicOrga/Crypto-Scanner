@@ -17,6 +17,7 @@ class RsiModel(models.Model):
 			objects.first().delete()
 
 class MarketModel(models.Model):
+	datetime_created = models.DateTimeField(default = timezone.now)
 	market = models.CharField(max_length = 11, default = "")
 	base_volume = models.FloatField()
 	bid = models.FloatField()
