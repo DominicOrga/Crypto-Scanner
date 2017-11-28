@@ -11,7 +11,7 @@ class MarketGroupModelAdmin(admin.ModelAdmin):
 	list_display = ("datetime_display", "markets_display")
 
 	def datetime_display(self, obj):
-		return obj.datetime.strftime("%m/%d/%Y, %H:%M:%S")
+		return obj.datetime_created.strftime("%m/%d/%Y, %H:%M:%S")
 
 	def markets_display(self, obj):
 		return obj

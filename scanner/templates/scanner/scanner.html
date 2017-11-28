@@ -41,7 +41,7 @@
 	</div>
 {% endblock %}
 
-{% block javascript %}
+{% block javascript %}	
 	<script type="text/javascript">
 
 		function updateTable() {
@@ -92,10 +92,6 @@
 
 					$("#scanner-update-delay").empty();
 					$("#scanner-update-delay").html(html);	
-
-					last_update = response["datetime_formatted"]
-					$("#last-market-update").empty();
-					$("#last-market-update").html(last_update);
 				}
 			})
 		};
@@ -115,13 +111,8 @@
 			})
 		};
 
-		(function update() {
-			updateTable();
-			updateBTCPriceChange();
-			setTimeout(update, 10000);
-		})();
-
+		periodicFunctions.push(updateTable);
+		periodicFunctions.push(updateBTCPriceChange);
 		
-
 	</script>
 {% endblock %}
