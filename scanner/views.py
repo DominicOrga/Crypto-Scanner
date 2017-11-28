@@ -22,7 +22,7 @@ def scan(request):
 		return JsonResponse({ "market_group": market_group_dict })
 
 	except MarketGroupModel.DoesNotExist:
-		JsonResponse({ "market_group": {} })
+		JsonResponse({ "market_group": [] })
 
 def last_market_update(request):
 	try:
