@@ -96,8 +96,9 @@
 					$("#scanner-update-delay").empty();
 					$("#scanner-update-delay").html(html);	
 
-					last_update = response["market_group"]["datetime_created"]
-					html = "<font color='" + (last_update < 30000 ? "green" : "red") + "'>" + last_update + "</font>";				
+					last_update = response["datetime_formatted"]
+					$("#last-market-update").empty();
+					$("#last-market-update").html(last_update);
 				}
 			})
 		};

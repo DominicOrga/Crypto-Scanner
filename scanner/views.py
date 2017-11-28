@@ -19,7 +19,9 @@ def scan(request):
 		market_group_dict = model_to_dict(market_group)
 		market_group_dict['markets'] = [model_to_dict(m) for m in market_group.markets.all()]
 
-		return JsonResponse({ "market_group": market_group_dict })
+		datetime_formatted = market_group_dict['datetime_created'].strftime("%b-%d-%Y, %I:%M:%S %p")
+
+		return JsonResponse({ "market_group": market_group_dict, "datetime_formatted": datetime_formatted })
 
 	except MarketGroupModel.DoesNotExist:
 		JsonResponse({ "market_group": {} })
