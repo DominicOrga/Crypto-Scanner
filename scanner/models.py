@@ -44,7 +44,7 @@ class MarketModel(models.Model):
 
 class MarketGroupModel(models.Model):
 	datetime_created = models.DateTimeField(default = timezone.now)
-	creation_delay_ms = models.FloatField(default = 0)
+	creation_delay_ms = models.FloatField(default = 0) # Time it takes for this MarketGroupModel to be created
 	markets = models.ManyToManyField(MarketModel)
 
 	def __str__(self):

@@ -5,9 +5,9 @@
 {% block body %}
 	<div align="center">
 		<div style="text-align: left; margin-right: 5%; margin-left: 5%">
-			<p class="field"> 
+			<p class="no-linebreak"> 
 				BTC Change (24h):
-				<p class="field" id="btc-change-24h"> </p> 
+				<p class="no-linebreak" id="btc-change-24h"> </p> 
 			</p>
 		
 			<div style="text-align: right;">
@@ -32,9 +32,9 @@
 					</table> 
 				</div>
 
-				<p class="field"> 
-					Market Update Delay (ms):
-					<p class="field" id="market-update-delay"> </p> 
+				<p class="no-linebreak"> 
+					Scanner Update Delay (ms):
+					<p class="no-linebreak" id="scanner-update-delay"> </p> 
 				</p>
 			</div>
 		</div>
@@ -87,15 +87,17 @@
 						html += "</tr>";
 					}
 
-					$("#market-update-delay").empty();
-
-					delay = response["creation_delay_ms"]
-					html = "<font color='" + (delay < 30000 ? "green" : "red") + "'>" + delay.toLocaleString("en") + " ms" + "</font>";
-
-					$("#market-update-delay").html(html);
-
 					$("#table-body").empty();
 					$("#table-body").html(html);
+
+					delay = response["market_group"]["creation_delay_ms"]
+					html = "<font color='" + (delay < 30000 ? "green" : "red") + "'>" + delay.toLocaleString("en") + " ms" + "</font>";
+
+					$("#scanner-update-delay").empty();
+					$("#scanner-update-delay").html(html);	
+
+					last_update = response["market_group"]["datetime_created"]
+					html = "<font color='" + (last_update < 30000 ? "green" : "red") + "'>" + last_update + "</font>";				
 				}
 			})
 		};

@@ -14,7 +14,7 @@
 			border-collapse: collapse;
 		}
 
-		p.field {
+		.no-linebreak {
 			display: inline;		
 		}
 
@@ -22,6 +22,22 @@
 		    border-collapse: collapse;
 		    border-spacing: 0;
 		    width: 100%;
+		}
+
+		.design {
+		    color: #fff;
+		    line-height: 30px;
+		    min-height: 30px;
+		    padding: 7px 15px;
+		    text-align: right;
+		}
+
+		.footer-bottom {
+		    background-color: #455A64;
+		    min-height: 30px;
+		    width: 100%;
+		    position: fixed;
+		    bottom: 0;
 		}
 	</style>
 
@@ -43,6 +59,20 @@
 	</nav>
 
 	{% block body %}
+	{% endblock %}
+
+	{% block footer %}
+	<div class="footer-bottom">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-9"></div>
+				<div class="col-sm-3 design">
+					<h6 class="no-linebreak"> Last Scanner Update: </h6>
+					<h6 class="no-linebreak"> Nov-15-2016, 12:32:49 PM </h6>
+				</div>
+			</div>
+		</div>
+	</div>
 	{% endblock %}
 
 
