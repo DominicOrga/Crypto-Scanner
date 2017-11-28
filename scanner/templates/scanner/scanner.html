@@ -44,9 +44,6 @@
 {% block javascript %}
 	<script type="text/javascript">
 
-		// URLs 
-		var updateTableListeners = []
-
 		function updateTable() {
 			$.ajax({
 				url: "{% url 'scan' %}",
