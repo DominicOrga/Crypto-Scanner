@@ -9,8 +9,16 @@ def load_strata(request):
 
 def strata_markets(request):
 
+	def duration(datetime_now, datetime_created):
+		delta = datetime_now - datetime_created
+
+		m = int(delta.seconds / 60)
+		s = delta.seconds - m * 60
+
+		return str(m) + "m " + str(s) + "s ago"
+
 	try:
-		markets = MarketModel.objects.filter(rsi__lte = 25, change_24h__gte = 0.05, change_12h__gte = 0.025, change_6h__gte = 0)
+		markets = MarketModel.objects.filter(rsi__lte = 25, change_24h__gte = 0.05, change_12h__gte = 0.025, change_6h__gte = 0).order_by("-datetime_created")
 		# markets = MarketModel.objects.filter(rsi__lte = 100) # Debugging purposes
 		
 		dt_now = datetime.datetime.utcnow()
@@ -20,12 +28,11 @@ def strata_markets(request):
 		markets_dict = [
 			dict(model_to_dict(m), 
 				datetime_formatted = m.datetime_created.strftime("%b-%d-%Y, %H:%M:%S"), 
-				is_recent = (timedelta - (dt_now - m.datetime_created.replace(tzinfo=None))).days >= 0) 
+				datetime_layman = duration(dt_now, m.datetime_created.replace(tzinfo = None)),
+				is_recent = (timedelta - (dt_now - m.datetime_created.replace(tzinfo = None))).days >= 0) 
 			for m in markets]
 
-		markets_dict_sorted = sorted(markets_dict, key = lambda k: k["datetime_created"], reverse = True)
-
-		return JsonResponse({ "markets": markets_dict_sorted })
+		return JsonResponse({ "markets": markets_dict })
 
 	except MarketModel.DoesNotExist:
 		return JsonResponse({ "markets": [] })

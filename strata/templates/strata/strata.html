@@ -55,7 +55,37 @@
 							</tr>
 						</thead>
 
-						<tbody id="table-body" />
+						<tbody id="table-recent-body" />
+					</table> 
+				</div>
+			</div>
+		</div>
+
+		<div style="text-align: left; margin-right: 5%; margin-left: 5%; margin-bottom: 5%">
+			<p class="no-linebreak" style="font-size: 3em;"> 
+				HISTORY
+			</p>
+		
+			<div style="text-align: right;">
+				<div style="overflow-x: auto;">
+					<table class="table table-bordered table-condensed table-striped">
+						<thead>
+							<tr>
+								<th> Datetime Created </th>
+								<th> Market </th>
+								<th> Base Volume (24h) </th>
+								<th> Bid </th>
+								<th> Ask </th>
+								<th> Last </th>
+								<th> Previous Day </th>
+								<th> % Change (24h) </th>
+								<th> % Change (12h) </th>
+								<th> % Change (6h) </th>
+								<th> RSI </th>
+							</tr>
+						</thead>
+
+						<tbody id="table-history-body" />
 					</table> 
 				</div>
 			</div>
@@ -74,13 +104,15 @@
 				type: "GET",
 				dataType: "json",
 				success: function(response) {
-					html = "";
+					tableRecentHtml = "";
+					tableHistoryHtml = "";
 
 					markets = response["markets"];
 
-					if (markets.length == 0) 
-						html = "<tr><td colspan=50> No Data to Display :( </td></tr>";
-		
+					if (markets.length == 0) {
+						tableRecentHtml = "<tr><td colspan=50> No Data to Display :( </td></tr>";
+						tableHistoryHtml = "<tr><td colspan=50> No Data to Display :( </td></tr>";
+					} 
 					else {
 
 						var recentMarkets = []
@@ -88,50 +120,58 @@
 						for (i = 0; i < markets.length; i++) {
 							var market = markets[i];
 
-							if (!market["is_recent"] || recentMarkets.indexOf(market["market"]) != -1)
-								continue;
-
-							recentMarkets.push(market["market"]);
-
-							html += "<tr>";
-							html += "<td>" + market["datetime_formatted"] + "</td>";
-							html += "<td>" + market["market"] + "</td>";
-							html += "<td>" + market["base_volume"].toFixed(3) + "</td>";
-							html += "<td>" + market["bid"].toFixed(8) + "</td>";
-							html += "<td>" + market["ask"].toFixed(8) + "</td>";
-							html += "<td>" + market["last"].toFixed(8) + "</td>";
-							html += "<td>" + market["previous_day"].toFixed(8) + "</td>";
-
-							change24H = market["change_24h"]
-							html += "<td><font color='" + (change24H >= 0 ? "green" : "red") + "'>" + (change24H * 100).toFixed(1) + "%" + "</font></td>";
-
-							change12H = market["change_12h"]
-							html += "<td><font color='" + (change12H >= 0 ? "green" : "red") + "'>" + (change12H * 100).toFixed(1) + "%" + "</font></td>";
-
-							change6H = market["change_6h"]
-							html += "<td><font color='" + (change6H >= 0 ? "green" : "red") + "'>" + (change6H * 100).toFixed(1) + "%" + "</font></td>";
-
-							rsi = market["rsi"]
-							if (rsi >= 70 || rsi <= 25)
-								html += "<td><font color='" + (rsi >= 70 ? "green" : "red") + "'>" + rsi.toFixed(2) + "</font></td>";
-							else
-								html += "<td>" + rsi.toFixed(2) + "</td>";
-
-							html += "</tr>";
+							if (market["is_recent"] && recentMarkets.indexOf(market["market"]) == -1) {
+								recentMarkets.push(market["market"]);
+								tableRecentHtml += makeTableRecord(market, true);
+							}
+							else {
+								tableHistoryHtml += makeTableRecord(market);
+							}
 						}
 
 						if (recentMarkets.length == 0)
-							html = "<tr><td colspan=50> No Data to Display :( </td></tr>";
+							tableRecentHtml = "<tr><td colspan=50> No Data to Display :( </td></tr>";
 					}
 
-					// for (i = 0; i < markets.length; i++)
-					// 	console.log(markets[i]["is_recent"]);
+					$("#table-recent-body").empty();
+					$("#table-recent-body").html(tableRecentHtml);
 
-					$("#table-body").empty();
-					$("#table-body").html(html);
+					$("#table-history-body").empty();
+					$("#table-history-body").html(tableHistoryHtml);					
 				}
 			});
 		};
+
+		function makeTableRecord(market, datetimeLayman = false) {
+			var html = "";
+			html += "<tr>";
+			html += "<td>" + (datetimeLayman ? market["datetime_layman"] : market["datetime_formatted"]) + "</td>";
+			html += "<td>" + market["market"] + "</td>";
+			html += "<td>" + market["base_volume"].toFixed(3) + "</td>";
+			html += "<td>" + market["bid"].toFixed(8) + "</td>";
+			html += "<td>" + market["ask"].toFixed(8) + "</td>";
+			html += "<td>" + market["last"].toFixed(8) + "</td>";
+			html += "<td>" + market["previous_day"].toFixed(8) + "</td>";
+
+			change24H = market["change_24h"]
+			html += "<td><font color='" + (change24H >= 0 ? "green" : "red") + "'>" + (change24H * 100).toFixed(1) + "%" + "</font></td>";
+
+			change12H = market["change_12h"]
+			html += "<td><font color='" + (change12H >= 0 ? "green" : "red") + "'>" + (change12H * 100).toFixed(1) + "%" + "</font></td>";
+
+			change6H = market["change_6h"]
+			html += "<td><font color='" + (change6H >= 0 ? "green" : "red") + "'>" + (change6H * 100).toFixed(1) + "%" + "</font></td>";
+
+			rsi = market["rsi"]
+			if (rsi >= 70 || rsi <= 25)
+				html += "<td><font color='" + (rsi >= 70 ? "green" : "red") + "'>" + rsi.toFixed(2) + "</font></td>";
+			else
+				html += "<td>" + rsi.toFixed(2) + "</td>";
+
+			html += "</tr>";
+
+			return html;
+		}
 
 		periodicFunctions.push(updateTables);
 
