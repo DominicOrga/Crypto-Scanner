@@ -29,10 +29,17 @@
 	</div>
 
 	<br>
+	<div align="right" style="margin-right: 5%">
+		<label>
+			Notification: 
+			<input type="checkbox" name="sound-switch">
+		</label>
+	</div>
+
 
 	<div align="center">
 		<div style="text-align: left; margin-right: 5%; margin-left: 5%">
-			<p class="no-linebreak" style="font-size: 3em;"> 
+			<p class="no-linebreak" style="font-size: 3em;">
 				RECENT MARKETS
 			</p>
 		
@@ -67,7 +74,7 @@
 			</p>
 		
 			<div style="text-align: right;">
-				<div style="overflow-x: auto;">
+				<div style="overflow-x: auto; overflow-y: auto;">
 					<table class="table table-bordered table-condensed table-striped">
 						<thead>
 							<tr>
@@ -97,7 +104,9 @@
 
 {% block javascript %}
 	<script type="text/javascript">
-		
+		$.fn.bootstrapSwitch.defaults.size = 'mini';
+		$("[name='sound-switch']").bootstrapSwitch();
+
 		function updateTables() {
 			$.ajax({
 				url: "{% url 'strata_markets' %}",
