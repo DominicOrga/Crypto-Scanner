@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block body %}
-
 	<div style="height: 200%; background-color: #263238; color: Gainsboro" align="center">
 		<div style="width: 80%; margin-top: -25px">
 			<div style="margin-left: auto; margin-right: auto; margin-top: 25px; margin-bottom: 15px;  text-align: left; display: inline-block;" class="container-fluid">
@@ -32,7 +31,7 @@
 	<div align="right" style="margin-right: 5%">
 		<label>
 			Notification: 
-			<input type="checkbox" name="sound-switch">
+			<input type="checkbox" name="notif-switch" id="notif-switch" onchange="onNotifSwitchClicked(this)">
 		</label>
 	</div>
 
@@ -100,13 +99,26 @@
 	</div>
 	</div>
 
+	{% load static %}
+	<audio src="{% static 'sound/analog-alarm.mp3' %}" id="notif-sound"/>
+
 {% endblock %}
 
 {% block javascript %}
 	<script type="text/javascript">
-		$.fn.bootstrapSwitch.defaults.size = 'mini';
-		$("[name='sound-switch']").bootstrapSwitch();
+		$.fn.bootstrapSwitch.defaults.size = "mini";
 
+		if (localStorage.getItem("isNotifEnabled") == null)
+			localStorage.setItem("isNotifEnabled", JSON.stringify(true));
+
+		$("[name='notif-switch']").bootstrapSwitch("state", JSON.parse(localStorage.getItem("isNotifEnabled")));
+
+		function onNotifSwitchClicked(cb) {
+			localStorage.setItem("isNotifEnabled", JSON.stringify(cb));
+		}
+	</script>
+
+	<script type="text/javascript">
 		function updateTables() {
 			$.ajax({
 				url: "{% url 'strata_markets' %}",
