@@ -108,13 +108,20 @@
 	<script type="text/javascript">
 		$.fn.bootstrapSwitch.defaults.size = "mini";
 
-		if (localStorage.getItem("isNotifEnabled") == null)
+		if (localStorage.getItem("isNotifEnabled") == null) {
 			localStorage.setItem("isNotifEnabled", JSON.stringify(true));
+		}
 
 		$("[name='notif-switch']").bootstrapSwitch("state", JSON.parse(localStorage.getItem("isNotifEnabled")));
 
 		function onNotifSwitchClicked(cb) {
-			localStorage.setItem("isNotifEnabled", JSON.stringify(cb));
+			if (cb.checked) {
+				localStorage.setItem("isNotifEnabled", JSON.stringify(true));
+			}
+			else {
+				localStorage.setItem("isNotifEnabled", JSON.stringify(false));
+				document.getElementById("notif-sound").pause();				
+			}
 		}
 	</script>
 
