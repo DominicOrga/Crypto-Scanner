@@ -105,7 +105,10 @@
 {% endblock %}
 
 {% block javascript %}
+
 	<script type="text/javascript">
+		// Setup notification switch behavior
+
 		$.fn.bootstrapSwitch.defaults.size = "mini";
 
 		if (localStorage.getItem("isNotifEnabled") == null) {
@@ -126,6 +129,39 @@
 	</script>
 
 	<script type="text/javascript">
+		// Notification system 
+
+		var isNoticed = false;
+
+		function notificationSystem(recentMarkets, recentMarkets_last) {
+			if (recentMarkets.length == 0) {
+				isNoticed = false;
+				// disable sound
+				// hide snackbar
+				return;
+			}
+
+			// If a new suitable market is registered, then set isNoticed to false.
+			outerloop:
+			for (i = 0; i < recentMarkets.length; i++) 
+				for (j = 0; j < recentMarkets_last.length; j++) 
+					if (recentMarkets[i] == recentMarkets_last[j]) {
+						isNoticed = false;
+						break outerloop;
+					}
+			
+			if (!isNoticed) {
+				// enable sound
+				// show snackbar
+			}
+		};
+
+	</script>
+
+	<script type="text/javascript">
+
+		var recentMarkets_last = [];
+
 		function updateTables() {
 			$.ajax({
 				url: "{% url 'strata_markets' %}",
@@ -138,8 +174,8 @@
 					markets = response["markets"];
 
 					if (markets.length == 0) {
-						tableRecentHtml = "<tr><td colspan=50> No Data to Display :( </td></tr>";
-						tableHistoryHtml = "<tr><td colspan=50> No Data to Display :( </td></tr>";
+						tableRecentHtml = "<tr><td colspan=50> No Data to Display </td></tr>";
+						tableHistoryHtml = "<tr><td colspan=50> No Data to Display </td></tr>";
 					} 
 					else {
 
@@ -157,15 +193,21 @@
 							}
 						}
 
-						if (recentMarkets.length == 0)
-							tableRecentHtml = "<tr><td colspan=50> No Data to Display :( </td></tr>";
+						if (recentMarkets.length == 0) 
+							tableRecentHtml = "<tr><td colspan=50> No Data to Display </td></tr>";
+
+						notificationSystem(recentMarkets, recentMarkets_last);
+
+						recentMarkets_last = recentMarkets;
 					}
 
 					$("#table-recent-body").empty();
 					$("#table-recent-body").html(tableRecentHtml);
 
 					$("#table-history-body").empty();
-					$("#table-history-body").html(tableHistoryHtml);					
+					$("#table-history-body").html(tableHistoryHtml);		
+
+
 				}
 			});
 		};
