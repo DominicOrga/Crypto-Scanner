@@ -101,7 +101,7 @@
 
 	<div id="notif-snackbar" class="snackbar">
 		<p class="no-linebreak" style="margin-right: 10px">New Buy Signal </p>
-		<input type="button" class="btn btn-primary btn-sm" value="Got it">
+		<input type="button" class="btn btn-primary btn-sm" value="Got it" onclick="noticeNotif()">
 	</div>
 
 	{% load static %}
@@ -125,12 +125,11 @@
 		function onNotifSwitchClicked(cb) {
 			if (cb.checked) {
 				localStorage.setItem("isNotifEnabled", JSON.stringify(true));
-				setSnackbarVisibility("notif-snackbar", true);
+				// setSnackbarVisibility("notif-snackbar", true);	// DEBUG
 			}
 			else {
 				localStorage.setItem("isNotifEnabled", JSON.stringify(false));
-				setSnackbarVisibility("notif-snackbar", false);
-				// document.getElementById("notif-sound").pause();				
+				// setSnackbarVisibility("notif-snackbar", false); // DEBUG
 			}
 		}
 	</script>
@@ -139,29 +138,45 @@
 		// Notification system 
 
 		var isNoticed = false;
+		document.getElementById("notif-sound").loop = true;		
+
 
 		function notificationSystem(recentMarkets, recentMarkets_last) {
+
+			if (!JSON.parse(localStorage.getItem("isNotifEnabled")))-
+				return;
+
+			// If not recent markets are found, then disable sound and hide snackbar
 			if (recentMarkets.length == 0) {
 				isNoticed = false;
-				// disable sound
-				// hide snackbar
+				document.getElementById("notif-sound").pause();		
+				setSnackbarVisibility("notif-snackbar", false);
 				return;
 			}
 
 			// If a new suitable market is registered, then set isNoticed to false.
 			outerloop:
 			for (i = 0; i < recentMarkets.length; i++) 
-				for (j = 0; j < recentMarkets_last.length; j++) 
-					if (recentMarkets[i] == recentMarkets_last[j]) {
-						isNoticed = false;
-						break outerloop;
-					}
-			
+				for (j = 0; j < recentMarkets_last.length; j++) {
+					if (recentMarkets[i] == recentMarkets_last[j]) 
+						break;
+					
+					isNoticed = false;
+					break outerloop;
+				}
+		
+			// If a recent market is not yet noticed, then enable sound and show snackbar
 			if (!isNoticed) {
-				// enable sound
-				// show snackbar
+				document.getElementById("notif-sound").play();
+				setSnackbarVisibility("notif-snackbar", true);		
 			}
 		};
+
+		function noticeNotif() {
+			isNoticed = true;
+			document.getElementById("notif-sound").pause();
+			setSnackbarVisibility("notif-snackbar", false);
+		}
 
 	</script>
 
@@ -203,6 +218,15 @@
 						if (recentMarkets.length == 0) 
 							tableRecentHtml = "<tr><td colspan=50> No Data to Display </td></tr>";
 
+						// DEBUG
+						// if (document.getElementById("notif-switch").checked) {
+						// 	notificationSystem(["321"], ["321"]);
+						// 	console.log("debug notif switch on");
+						// }
+						// else {
+						// 	notificationSystem(recentMarkets, recentMarkets_last);
+						// }
+
 						notificationSystem(recentMarkets, recentMarkets_last);
 
 						recentMarkets_last = recentMarkets;
@@ -213,8 +237,6 @@
 
 					$("#table-history-body").empty();
 					$("#table-history-body").html(tableHistoryHtml);		
-
-
 				}
 			});
 		};
