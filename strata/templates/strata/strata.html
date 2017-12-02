@@ -99,6 +99,8 @@
 	</div>
 	</div>
 
+	<div id="notif-snackbar" class="snackbar">My snackbar</div>
+
 	{% load static %}
 	<audio src="{% static 'sound/analog-alarm.mp3' %}" id="notif-sound"/>
 
@@ -120,10 +122,12 @@
 		function onNotifSwitchClicked(cb) {
 			if (cb.checked) {
 				localStorage.setItem("isNotifEnabled", JSON.stringify(true));
+				setSnackbarVisibility("notif-snackbar", true);
 			}
 			else {
 				localStorage.setItem("isNotifEnabled", JSON.stringify(false));
-				document.getElementById("notif-sound").pause();				
+				setSnackbarVisibility("notif-snackbar", false);
+				// document.getElementById("notif-sound").pause();				
 			}
 		}
 	</script>

@@ -1,15 +1,13 @@
 
 function setSnackbarVisibility(snackbarID, visibility) {
-    var sb = document.getElementById(snackbarID)
+    var sb = document.getElementById(snackbarID);
 
-    if (visibility) {
-        if (!isShown()) {
-            sb.className = "show";
-        }
+    if (visibility && !isSnackbarShown(snackbarID)) {
+        sb.className = sb.className.replace("snackbar", "snackbar show");    
     } 
-    else {
-        sb.className = sb.className.replace("show","hide");
-        setTimeout(function() { sb.className = sb.className.replace("hide", ""); }, 500);
+    else if (!visibility && isSnackbarShown(snackbarID)) {
+        sb.className = sb.className.replace("show","show hide");
+        setTimeout(function() { sb.className = sb.className.replace("snackbar show hide", "snackbar"); }, 500);
     }
 }
 
