@@ -99,7 +99,10 @@
 	</div>
 	</div>
 
-	<div id="notif-snackbar" class="snackbar">My snackbar</div>
+	<div id="notif-snackbar" class="snackbar">
+		<p class="no-linebreak" style="margin-right: 10px">New Buy Signal </p>
+		<input type="button" class="btn btn-primary btn-sm" value="Got it">
+	</div>
 
 	{% load static %}
 	<audio src="{% static 'sound/analog-alarm.mp3' %}" id="notif-sound"/>
