@@ -20,7 +20,7 @@ def strata_markets(request):
 	try:
 		markets = MarketModel.objects.filter(rsi__lte = 25, change_24h__gte = 0.05, change_12h__gte = 0.025, change_6h__gte = 0).order_by("-datetime_created")
 		# markets = MarketModel.objects.filter(rsi__lte = 100) # Debugging purposes
-		
+
 		dt_now = datetime.datetime.utcnow()
 		timedelta = datetime.timedelta(minutes=15)
 
