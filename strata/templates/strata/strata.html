@@ -28,15 +28,28 @@
 	</div>
 
 	<br>
-	<div  style="margin-right: 2.5%; float: right; width: 15%;">
-		<label align="right">
-			Notification: 
-			<input type="checkbox" name="notif-switch" id="notif-switch" onchange="onNotifSwitchClicked(this)">
-		</label>
-		<label style="text-align: left;">
+	<div align="right" style="margin-right: 2.5%; float: right;">
+		<div style="display: inline">
+			<label>
+				Notification: 
+			</label>
+				<input type="checkbox" name="notif-switch" id="notif-switch" onchange="onNotifSwitchClicked(this)">
+		</div>
+		<br>
+		<br>
+		<div>
+			<label>
 			Your email address:
-		</label>
-		<input type="text" name="">
+			</label>
+			<br>
+			<input type="text" name="" style="margin-bottom: 10px" placeholder="Enter email address">
+			<br>
+			<input type="button" class="btn btn-primary btn-sm btn-block" value="SUBSCRIBE">
+			<input type="button" class="btn btn-danger btn-sm btn-block" value="UNSUBSCRIBE">
+		</div>	
+		<br>
+		<br>
+		
 	</div>
 
 
@@ -275,7 +288,6 @@
 		}
 
 		periodicFunctions.push(updateTables);
-
 	</script>
 
 
