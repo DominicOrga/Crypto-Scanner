@@ -44,9 +44,9 @@
 			</label>
 			<br>
 			<div style="display: inline-block">
-				<input type="text" name="" style="margin-bottom: 10px" placeholder="Enter email address">
+				<input type="text" name="email-text" style="margin-bottom: 10px" placeholder="Enter email address">
 				<br>
-				<input type="button" class="btn btn-primary btn-sm btn-block" value="SUBSCRIBE">
+				<input type="button" class="btn btn-primary btn-sm btn-block" value="SUBSCRIBE" onclick="subscribeEmail()">
 				<input type="button" class="btn btn-danger btn-sm btn-block" value="UNSUBSCRIBE">
 			</div>
 		</div>	
@@ -194,6 +194,20 @@
 			isNoticed = true;
 			document.getElementById("notif-sound").pause();
 			setSnackbarVisibility("notif-snackbar", false);
+		}
+
+	</script>
+
+	<script type="text/javascript">
+		function subscribeEmail() {
+			$.ajax({
+				url: "{% url 'strata_subscribe' %}",
+				type: "GET",
+				dataType: "json",
+				data: {"email": $("[name=email-text]").val() },
+				success: function(response) {
+				}
+			});
 		}
 
 	</script>

@@ -37,3 +37,5 @@ def strata_markets(request):
 	except MarketModel.DoesNotExist:
 		return JsonResponse({ "markets": [] })
 		
+def subscribe(request):
+	return JsonResponse({ "test": request.GET["email"] })
