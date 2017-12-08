@@ -101,7 +101,6 @@
 			</div>
 		</div>
 	</div>
-	</div>
 
 	<div id="notif-snackbar" class="snackbar">
 		<p class="no-linebreak" style="margin-right: 10px">New Buy Signal </p>
@@ -109,8 +108,7 @@
 	</div>
 
 	{% load static %}
-	<audio src="{% static 'sound/analog-alarm.mp3' %}" id="notif-sound"/>
-
+	<audio src="{% static 'sound/analog-alarm.mp3' %}" id="notif-sound"></audio>
 {% endblock %}
 
 {% block javascript %}
