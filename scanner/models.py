@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-# Create your models here.
+
 class RsiModel(models.Model):
 	market = models.CharField(max_length = 11, default = "")
 	ave_gain = models.FloatField()
@@ -46,3 +46,7 @@ class MarketGroupModel(models.Model):
 			m.delete()
 		
 		super(MarketGroupModel, self).delete(*args, **kwargs)
+
+class SubscriptionModel(models.Model):
+	strategy = models.CharField(max_length = 2, default = "")
+	email = models.EmailField()
