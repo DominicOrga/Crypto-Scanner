@@ -47,7 +47,7 @@
 				<input type="text" name="email-text" style="margin-bottom: 10px" placeholder="Enter email address">
 				<br>
 				<input type="button" class="btn btn-primary btn-sm btn-block" value="SUBSCRIBE" onclick="subscribeEmail()">
-				<input type="button" class="btn btn-danger btn-sm btn-block" value="UNSUBSCRIBE">
+				<input type="button" class="btn btn-danger btn-sm btn-block" value="UNSUBSCRIBE" onclick="unsubscribeEmail()">
 			</div>
 		</div>	
 		<br>
@@ -209,10 +209,36 @@
 				dataType: "json",
 				data: { "email": $("[name=email-text]").val() },
 				success: function(response) {
-					console.log(response["success"]);
+					if (response["success"]) {
+						$("[name=email-text]").attr("placeholder", "Email subscribed!")
+					}
+					else {
+						$("[name=email-text]").attr("placeholder", "Invalid / Subscribed email")
+					}
 				}
 			});
 		}
+
+		function unsubscribeEmail() {
+			$.ajax({
+				url: "{% url 'strata_unsubscribe' %}",
+				type: "GET",
+				dataType: "json",
+				data: { "email": $("[name=email-text]").val() },
+				success: function(response) {
+
+					if(response["success"]) {
+						$("[name=email-text]").attr("placeholder", "Email unsusbscribed!")
+						$("[name=email-text]").val("")
+					}
+					else {
+						$("[name=email-text]").attr("placeholder", "Unsubscribed email")
+						$("[name=email-text]").val("")
+					}
+				}
+			});
+		}
+
 	</script>
 
 	<script type="text/javascript">

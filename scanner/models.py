@@ -50,3 +50,9 @@ class MarketGroupModel(models.Model):
 class SubscriptionModel(models.Model):
 	strategy = models.CharField(max_length = 2, default = "")
 	email = models.EmailField()
+
+	def save(self):
+		if (len(email) != 0):
+			super(SubscriptionModel, self).save(*args, **kwargs)
+		else:
+			raise ValidationError("Email is empty")

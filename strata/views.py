@@ -45,3 +45,10 @@ def subscribe(request):
 	except:
 		return JsonResponse({ "success": False })
 
+def unsubscribe(request):
+
+	try:
+		SubscriptionModel.objects.get(strategy = "A", email = request.GET["email"]).delete()
+		return JsonResponse({ "success": True })
+	except SubscriptionModel.DoesNotExist:
+		return JsonResponse({ "success": False })
