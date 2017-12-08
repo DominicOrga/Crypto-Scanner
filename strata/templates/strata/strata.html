@@ -155,7 +155,10 @@
 	<script type="text/javascript">
 		// Notification system 
 
-		var isNoticed = false;
+		if (localStorage.getItem("isNoticed") == null) {
+			localStorage.setItem("isNoticed", JSON.stringify(false));
+		}
+
 		document.getElementById("notif-sound").loop = true;		
 
 
@@ -166,7 +169,7 @@
 
 			// If not recent markets are found, then disable sound and hide snackbar
 			if (recentMarkets.length == 0) {
-				isNoticed = false;
+				localStorage.setItem("isNoticed", JSON.stringify(false));
 				document.getElementById("notif-sound").pause();		
 				setSnackbarVisibility("notif-snackbar", false);
 				return;
@@ -179,19 +182,19 @@
 					if (recentMarkets[i] == recentMarkets_last[j]) 
 						break;
 					
-					isNoticed = false;
+					localStorage.setItem("isNoticed", JSON.stringify(false));
 					break outerloop;
 				}
 		
 			// If a recent market is not yet noticed, then enable sound and show snackbar
-			if (!isNoticed) {
+			if (!JSON.parse(localStorage.getItem("isNoticed"))) {
 				document.getElementById("notif-sound").play();
 				setSnackbarVisibility("notif-snackbar", true);		
 			}
 		};
 
 		function noticeNotif() {
-			isNoticed = true;
+			localStorage.setItem("isNoticed", JSON.stringify(true));
 			document.getElementById("notif-sound").pause();
 			setSnackbarVisibility("notif-snackbar", false);
 		}
