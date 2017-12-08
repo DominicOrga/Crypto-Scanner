@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RsiModel, MarketModel, MarketGroupModel
+from .models import RsiModel, MarketModel, MarketGroupModel, SubscriptionModel
 
 class RsiModelAdmin(admin.ModelAdmin):
 	list_display = ("market", "ave_gain", "ave_loss", "datetime")
@@ -19,7 +19,11 @@ class MarketGroupModelAdmin(admin.ModelAdmin):
 	def markets_display(self, obj):
 		return obj
 
+class SubscriptionModelAdmin(admin.ModelAdmin):
+	list_display = ["strategy", "email"]
+
 # Register your models here.
 admin.site.register(RsiModel, RsiModelAdmin)
 admin.site.register(MarketModel, MarketModelAdmin)
 admin.site.register(MarketGroupModel, MarketGroupModelAdmin)
+admin.site.register(SubscriptionModel, SubscriptionModelAdmin)

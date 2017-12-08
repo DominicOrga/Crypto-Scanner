@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-from scanner.models import MarketModel
+from scanner.models import MarketModel, SubscriptionModel
 import datetime
 
 def load_strata(request):
@@ -37,5 +37,11 @@ def strata_markets(request):
 	except MarketModel.DoesNotExist:
 		return JsonResponse({ "markets": [] })
 		
-def subscribe(request):
-	return JsonResponse({ "test": request.GET["email"] })
+def subscribe(request):	
+
+	try:
+		SubscriptionModel.objects.create(strategy = "A", email = request.GET["email"])
+		return JsonResponse({ "success": True })
+	except:
+		return JsonResponse({ "success": False })
+

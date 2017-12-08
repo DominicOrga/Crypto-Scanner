@@ -204,12 +204,12 @@
 				url: "{% url 'strata_subscribe' %}",
 				type: "GET",
 				dataType: "json",
-				data: {"email": $("[name=email-text]").val() },
+				data: { "email": $("[name=email-text]").val() },
 				success: function(response) {
+					console.log(response["success"]);
 				}
 			});
 		}
-
 	</script>
 
 	<script type="text/javascript">
