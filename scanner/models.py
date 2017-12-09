@@ -51,8 +51,13 @@ class SubscriptionModel(models.Model):
 	strategy = models.CharField(max_length = 2, default = "")
 	email = models.EmailField()
 
-	def save(self):
-		if (len(email) != 0):
-			super(SubscriptionModel, self).save(*args, **kwargs)
-		else:
-			raise ValidationError("Email is empty")
+	def save(self, *args, **kwargs):
+
+		try:
+			SubscriptionModel.objects.get(strategy = self.strategy, email = self.email)
+			raise ValidationError("Email exists")
+		except SubscriptionModel.DoesNotExist:
+			if (len(self.email) == 0):
+				raise ValidationError("Email empty")
+			else:
+				super(SubscriptionModel, self).save(*args, **kwargs)

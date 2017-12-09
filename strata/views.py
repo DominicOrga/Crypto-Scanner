@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
+from django.core.mail import send_mail
+from django.conf import settings
 from scanner.models import MarketModel, SubscriptionModel
 import datetime
 
@@ -54,5 +56,12 @@ def unsubscribe(request):
 		return JsonResponse({ "success": False })
 
 def email(request):
+
+	subject = "Strata A: New Buy Signal"
+	message = ""
+	sender = settings.EMAIL_HOST_USER
+	receiver = [sender, "dominicorga@gmail.com"]
+
+	send_mail(subject, message, sender, receiver)
 
 	return JsonResponse({})
