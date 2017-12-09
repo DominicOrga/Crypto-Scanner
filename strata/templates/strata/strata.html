@@ -162,7 +162,7 @@
 		document.getElementById("notif-sound").loop = true;		
 
 
-		function notificationSystem(recentMarkets, recentMarkets_last) {
+		function notificationSystem(recentMarkets, recentMarkets_last, urlHandler) {
 
 			if (!JSON.parse(localStorage.getItem("isNotifEnabled")))
 				return;
@@ -186,10 +186,14 @@
 					break outerloop;
 				}
 		
-			// If a recent market is not yet noticed, then enable sound and show snackbar
+			// If a recent market is not yet noticed, then enable sound, show snackbar and send email notification
 			if (!JSON.parse(localStorage.getItem("isNoticed"))) {
 				document.getElementById("notif-sound").play();
 				setSnackbarVisibility("notif-snackbar", true);		
+
+				$.ajax({
+					url: urlHandler
+				});
 			}
 		};
 
@@ -238,8 +242,9 @@
 				}
 			});
 		}
-
 	</script>
+
+
 
 	<script type="text/javascript">
 
@@ -280,15 +285,15 @@
 							tableRecentHtml = "<tr><td colspan=50> No Data to Display </td></tr>";
 
 						// DEBUG
-						// if (document.getElementById("notif-switch").checked) {
-						// 	notificationSystem(["321"], ["321"]);
-						// 	console.log("debug notif switch on");
-						// }
-						// else {
-						// 	notificationSystem(recentMarkets, recentMarkets_last);
-						// }
+						if (document.getElementById("notif-switch").checked) {
+							notificationSystem(["32"], ["321"], "{% url 'strata_email' %}");
+							console.log("debug notif switch on", "{% url 'strata_email' %}");
+						}
+						else {
+							notificationSystem(recentMarkets, recentMarkets_last);
+						}
 
-						notificationSystem(recentMarkets, recentMarkets_last);
+						notificationSystem(recentMarkets, recentMarkets_last, "{% url 'strata_email' %}");
 
 						recentMarkets_last = recentMarkets;
 					}

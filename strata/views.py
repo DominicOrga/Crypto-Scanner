@@ -52,3 +52,7 @@ def unsubscribe(request):
 		return JsonResponse({ "success": True })
 	except SubscriptionModel.DoesNotExist:
 		return JsonResponse({ "success": False })
+
+def email(request):
+
+	return JsonResponse({})
