@@ -121,5 +121,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Implement Python Decouple library for security 
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = "dominicorga@gmail.com"
+EMAIL_HOST_USER = 'cryptorga0@gmail.com'
+EMAIL_HOST_PASSWORD = 'G4mkgo31nel'
+EMAIL_PORT = 587

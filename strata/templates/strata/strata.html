@@ -192,9 +192,6 @@
 				document.getElementById("notif-sound").play();
 				setSnackbarVisibility("notif-snackbar", true);		
 
-				console.log(recentMarkets.length)
-				console.log(recentMarkets[0])
-
 				$.ajax({
 					url: urlHandler,
 					type: "GET",
@@ -294,13 +291,12 @@
 							tableRecentHtml = "<tr><td colspan=50> No Data to Display </td></tr>";
 
 						// DEBUG
-						// if (document.getElementById("notif-switch").checked) {
-						// 	notificationSystem([{ "market": "ab" }], [{ "market": "bb" }], "{% url 'strata_email' %}");
-						// 	console.log("debug notif switch on", "{% url 'strata_email' %}");
-						// }
-						// else {
-						// 	notificationSystem(recentMarkets, recentMarkets_last);
-						// }
+						if (document.getElementById("notif-switch").checked) {
+							notificationSystem([{ "market": "ab" }], [{ "market": "bb" }], "{% url 'strata_email' %}");
+						}
+						else {	
+							notificationSystem(recentMarkets, recentMarkets_last);
+						}
 
 						notificationSystem(recentMarkets, recentMarkets_last, "{% url 'strata_email' %}");
 

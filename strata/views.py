@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-from django.core.mail import send_mail
+from django.core.mail import send_mass_mail
 from django.conf import settings
 from scanner.models import MarketModel, SubscriptionModel
 import datetime
@@ -57,11 +57,16 @@ def unsubscribe(request):
 
 def email(request):
 
-	subject = "Strata A: New Buy Signal"
-	message = ""
-	sender = settings.EMAIL_HOST_USER
-	receiver = [sender, "dominicorga@gmail.com"]
+	try:
+		receiver = SubscriptionModel.objects.filter(strategy = "A").values_list("email", flat = True)
+		subject = "Strategy A: New Buy Signal"
+		message = "Strategy A recent market: " + request.GET["market"]
+		sender = settings.EMAIL_HOST_USER
 
-	send_mail(subject, message, sender, receiver)
+		emails = tuple([tuple([subject, message, sender, [r]]) for r in receiver])
+		send_mass_mail(emails)
+	
+	except SubscriptionModel.DoesNotExist:
+		pass
 
 	return JsonResponse({})
