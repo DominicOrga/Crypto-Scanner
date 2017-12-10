@@ -162,11 +162,9 @@
 		document.getElementById("notif-sound").loop = true;		
 
 
-		function notificationSystem(recentMarkets, recentMarkets_last, urlHandler) {
+		function notificationSystem(recentMarkets, recentMarkets_last) {
 
-			if (!JSON.parse(localStorage.getItem("isNotifEnabled")))
-				return;
-
+		
 			// If not recent markets are found, then disable sound and hide snackbar
 			if (recentMarkets.length == 0) {
 				localStorage.setItem("isNoticed", JSON.stringify(false));
@@ -186,18 +184,22 @@
 					new_market = recentMarkets[i]["market"]
 					break outerloop;
 				}
-		
-			// If a recent market is not yet noticed, then enable sound, show snackbar and send email notification
-			if (!JSON.parse(localStorage.getItem("isNoticed"))) {
-				document.getElementById("notif-sound").play();
-				setSnackbarVisibility("notif-snackbar", true);		
 
-				$.ajax({
-					url: urlHandler,
+			// Email subscribers
+			$.ajax({
+					url: "{% url 'strata_email' %}",
 					type: "GET",
 					dataType: "json",
 					data: { "market": new_market }
 				});
+
+			if (!JSON.parse(localStorage.getItem("isNotifEnabled")))
+				return;
+		
+			// If a recent market is not yet noticed, then enable sound and show snackbar
+			if (!JSON.parse(localStorage.getItem("isNoticed"))) {
+				document.getElementById("notif-sound").play();
+				setSnackbarVisibility("notif-snackbar", true);		
 			}
 		};
 
@@ -292,13 +294,13 @@
 
 						// DEBUG
 						if (document.getElementById("notif-switch").checked) {
-							notificationSystem([{ "market": "ab" }], [{ "market": "bb" }], "{% url 'strata_email' %}");
+							notificationSystem([{ "market": "ab" }], [{ "market": "bb" }]);
 						}
 						else {	
 							notificationSystem(recentMarkets, recentMarkets_last);
 						}
 
-						notificationSystem(recentMarkets, recentMarkets_last, "{% url 'strata_email' %}");
+						notificationSystem(recentMarkets, recentMarkets_last);
 
 						recentMarkets_last = recentMarkets;
 					}
